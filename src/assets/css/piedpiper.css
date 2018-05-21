@@ -161,13 +161,12 @@
     height: 200px;
   }
 
-  .red-input {
-   background: transparent;
-       border: none;
-       margin: 30px;
-       padding: 10px 20px;
-       border: 1px solid #DDD;
-       font-size: 11px;
+  .editable-input {
+    background: transparent;
+    margin: 30px;
+    padding: 10px 40px;
+    border: 1px dashed dodgerblue;
+    font-size: 11px;
   }
 
   .red-input::placeholder {
@@ -251,7 +250,7 @@
 
   .node-name {
         display: inline-block;
-        margin-right: 15px;
+        margin: 0px 15px 0px 0px;
         color: #c2414a;
         font-weight: bold;
         font-size: 14px;
@@ -300,8 +299,12 @@
 
   .param-details-container .param-name {
     text-align: left;
-    padding: 13px 0px 10px 0px;
+    padding: 10px 12px;
     font-weight: bold;
+    margin: 0px 0px 30px 0px;
+    width: auto;
+    margin-right: auto;
+    width: 50%;
   }
 
   .param-type {
@@ -328,6 +331,12 @@
   }
   .right {
     float:right;
+  }
+  .alert-nodename {
+    margin-top: 10px;
+  }
+  .inline-field {
+    display: inline;
   }
 
 

@@ -5,29 +5,26 @@
       <div class="heading">CREATE API GRAPH</div>
       <div class="content">
         <div class="nav-actions left">
-          <input class="red-input" type="Text" placeholder="PROJECT NAME" v-model="graph.projectName"/>
-          <input class="red-input" type="Text" placeholder="API NAME" v-model="graph.graphName"/>
-
+          <editable v-model="graph.projectName" class="editable-input inline-field"></editable>
+          <editable v-model="graph.graphName" class="editable-input inline-field"></editable>
 
           <div class="btn btn-primary"> Test </div>
           <div class="btn btn-danger" @click="printGraph()"> Save </div>
 
-
         </div>
         <div class="nav-actions right">
           <b-dropdown id="ddown1" text="Add Node" right class="m-md-2" variant="success" >
-                    <b-dropdown-item v-for="node in availableNodes">
-                      {{node}}
-                    </b-dropdown-item>
-                  </b-dropdown>
+            <b-dropdown-item v-for="(node) in availableNodes" :key="node.nodeName" @click="addNode(node)">
+              {{node.nodeName}}
+            </b-dropdown-item>
+          </b-dropdown>
         </div>
-
 
         <div class="node-container">
           <div class="node-list">
             <div class="heading">LIST OF NODES  </div>
             <ul>
-              <li class="node" v-for="(node) in graph.nodeMap" :key="node.nodeName" v-bind:class="{selected: nodeSeen === 'node-'+node.nodeName}" @click="nodeSeen = 'node-'+node.nodeName">
+              <li class="node" v-for="(node) in graph.nodeMap" :key="node.nodeName" v-bind:class="{selected: isNodeSelected(node.nodeName)}" @click="setNodeSelection(node.nodeName)">
                 {{node.nodeName}}
               </li>
             </ul>
@@ -35,10 +32,11 @@
           <div class="spacing"></div>
 
           <div class="node-details" v-for="(node) in graph.nodeMap" :key="node.nodeName">
-            <template v-if="nodeSeen === 'node-'+node.nodeName">
+            <template v-if="isNodeSelected(node.nodeName)">
               <div class="heading">
-                <div class="node-name">{{node.nodeName}}</div>
+                <editable v-model="node.nodeName" @input="syncNodeSelected(...arguments)" class="node-name editable-input"></editable>
                 <div class="node-type">Type:  {{node.nodeClassName}}</div>
+                <div class="alert alert-danger alert-nodename" v-if="isNodeError(node.nodeName)"><strong>Duplicate Node Name!</strong> Please provide a name which does not exist</div>
               </div>
               <div class="node-spec-container">
                 <span class="node-spec"> <a href="#">Interim</a> </span>
@@ -55,14 +53,15 @@
               <div class="parameter-container">
                 <div class="param-list-container">
                   <ul>
-                    <li class="node"  v-for="(parameter) in node.parameterMap" :key="parameter.parameterName" v-bind:class="{selected: paramSeen === 'node-'+node.nodeName+'-param-'+ parameter.parameterName}" @click="paramSeen = 'node-'+node.nodeName+'-param-'+parameter.parameterName">
+                    <li class="node"  v-for="(parameter) in node.parameterMap" :key="parameter.parameterName" v-bind:class="{selected: isParamSelected(node.nodeName, parameter.parameterName)}" @click="setParamSelection(node.nodeName, parameter.parameterName)">
                       {{parameter.parameterName}}
                     </li>
                   </ul>
                 </div>
                 <div class="spacing"></div>
-                <div class="param-details-container" v-for="(parameter) in node.parameterMap" v-if="paramSeen === 'node-'+node.nodeName+'-param-'+ parameter.parameterName" :key="parameter.parameterName">
-                    <div class="param-name">{{parameter.parameterName}}</div>
+                <div class="param-details-container" v-for="(parameter) in node.parameterMap" v-if="isParamSelected(node.nodeName, parameter.parameterName)" :key="parameter.parameterName">
+                    <editable v-model="parameter.parameterName" @input="syncParamSelected(...arguments)" class="param-name editable-input"></editable>
+                    <div class="alert alert-danger alert-nodename" v-if="isParamError(parameter.parameterName)"><strong>Duplicate Parameter Name!</strong> Please provide a name which does not exist</div>
                     <select v-model="parameter.parameterType" class="param-type">
                       <template v-for="parameterType in parameterTypes">
                         <option v-bind:key="parameterType">
@@ -89,19 +88,75 @@
 </template>
 
 <script>
+import editable from './Editable.vue'
 export default {
   name: 'PiedPiper',
+  components: {
+    'editable': editable
+  },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
       graph: JSON.parse(' { "projectName": "TestProject", "graphName": "TestGraph", "nodeMap": { "Node1": { "nodeName": "Node1", "nodeClassName": "com.atom8.piedpiper.node.mock.MockNode1" }, "Node2": { "nodeName": "Node2", "nodeClassName": "com.atom8.piedpiper.node.mock.MockNode2" }, "Node3": { "nodeName": "Node3", "nodeClassName": "com.atom8.piedpiper.node.mock.MockNode3", "parameterMap": { "param1": { "parameterName": "param1", "parameterType": "CONSTANT", "parameterValue": "akash" }, "param2": { "parameterName": "param2", "parameterType": "VALUE_SPECIFIED_AT_RUNTIME", "parameterValue": "runtimeValue" }, "param3": { "parameterName": "param3", "parameterType": "REFERENCE_FROM_ANOTHER_NODE", "parameterValue": "$.referenceValue1", "referenceNodeName": "Node1" }, "param4": { "parameterName": "param4", "parameterType": "REFERENCE_FROM_ANOTHER_NODE", "parameterValue": "$.referenceValue2", "referenceNodeName": "Node2" } } }, "Node4": { "nodeName": "Node4", "nodeClassName": "com.atom8.piedpiper.node.mock.MockNode4", "parameterMap": { "param1": { "parameterName": "param1", "parameterType": "REFERENCE_FROM_ANOTHER_NODE", "parameterValue": "$.referenceValue3", "referenceNodeName": "Node3" } } }, "Node5": { "nodeName": "Node5", "nodeClassName": "com.atom8.piedpiper.node.mock.MockNode5", "parameterMap": { "param1": { "parameterName": "param1", "parameterType": "REFERENCE_FROM_ANOTHER_NODE", "parameterValue": "$.referenceValue3", "referenceNodeName": "Node3" } } }, "Node6": { "nodeName": "Node6", "nodeClassName": "com.atom8.piedpiper.node.mock.MockNode6", "parameterMap": { "param1": { "parameterName": "param1", "parameterType": "REFERENCE_FROM_ANOTHER_NODE", "parameterValue": "$.referenceValue3", "referenceNodeName": "Node3" } } }, "Node7": { "nodeName": "Node7", "nodeClassName": "com.atom8.piedpiper.node.mock.MockNode7", "parameterMap": { "param1": { "parameterName": "param1", "parameterType": "REFERENCE_FROM_ANOTHER_NODE", "parameterValue": "$.referenceValue4", "referenceNodeName": "Node4" }, "param2": { "parameterName": "param2", "parameterType": "REFERENCE_FROM_ANOTHER_NODE", "parameterValue": "$.referenceValue5", "referenceNodeName": "Node5" }, "param3": { "parameterName": "param3", "parameterType": "REFERENCE_FROM_ANOTHER_NODE", "parameterValue": "$.referenceValue6", "referenceNodeName": "Node6" } } } } }'),
       parameterTypes: ['CONSTANT', 'REFERENCE_FROM_ANOTHER_NODE', 'VALUE_SPECIFIED_AT_RUNTIME'],
-      paramSeen: '',
-      nodeSeen: '',
-      availableNodes: ['DynamoDBRetrieverNode', 'RESTServiceNode']
+      paramSelected: '',
+      nodeSelected: '',
+      duplicateNodeNameError: '',
+      duplicateParamNameError: '',
+      editField: '',
+      availableNodes: [{ 'nodeName': 'DynamoDBRetrieverNode', 'nodeClassName': 'com.atom8.piedpiper.node.mock.DynamoDBRetrieverNode' }, { 'nodeName': 'RESTServiceNode', 'nodeClassName': 'com.atom8.piedpiper.node.mock.RESTServiceNode' }],
+      myText: 'Edit this text, dude'
     }
   },
   methods: {
+    printGraph: function () {
+      alert(JSON.stringify(this.graph))
+    },
+    getNodeSelectionValue: function (nodeName) {
+      return nodeName
+    },
+    setNodeSelection: function (nodeName) {
+      this.nodeSelected = this.getNodeSelectionValue(nodeName)
+    },
+    isNodeSelected: function (nodeName) {
+      return this.nodeSelected === this.getNodeSelectionValue(nodeName)
+    },
+    isNodeError: function (nodeName) {
+      return this.duplicateNodeNameError === this.getNodeSelectionValue(nodeName)
+    },
+    addNode: function (node) {
+      if (this.graph.nodeMap === undefined) {
+        this.$set(this.graph, 'nodeMap', {})
+      }
+      var clonedNode = JSON.parse(JSON.stringify(node))
+      clonedNode.nodeName = 'Node' + (parseInt(Object.keys(this.graph.nodeMap).length) + 1)
+      this.$set(this.graph.nodeMap, clonedNode.nodeName, clonedNode)
+      this.setNodeSelection(clonedNode.nodeName)
+    },
+    syncNodeSelected: function (output, prev) {
+      if(output === prev) {
+        this.duplicateNodeNameError = ''
+        return
+      }
+      if(this.graph.nodeMap[output] != undefined) {
+        this.duplicateNodeNameError = this.getNodeSelectionValue(prev)
+        this.graph.nodeMap[prev].nodeName = prev
+        return;
+      }
+
+      var currentState = this.graph.nodeMap[prev]
+      this.$delete(this.graph.nodeMap, prev)
+      this.$set(this.graph.nodeMap, output, currentState)
+      this.setNodeSelection(output)
+    },
+    getParamSelectionValue: function (nodeName, parameterName) {
+      return parameterName
+    },
+    setParamSelection: function (nodeName, parameterName) {
+      this.paramSelected = this.getParamSelectionValue(nodeName, parameterName)
+    },
+    isParamSelected: function (nodeName, parameterName) {
+      return this.paramSelected === this.getParamSelectionValue(nodeName, parameterName)
+    },
     addParam: function (node) {
       if (node.parameterMap === undefined) {
         this.$set(node, 'parameterMap', {})
@@ -110,15 +165,32 @@ export default {
       var paramName = 'param' + (parseInt(Object.keys(paramMap).length) + 1)
       var newParameter = { 'parameterName': paramName, 'parameterType': 'CONSTANT', 'parameterValue': '', 'referenceNodeName': '' }
       this.$set(paramMap, paramName, newParameter)
+      this.setParamSelection(node.nodeName, paramName)
     },
-    printGraph: function () {
-      alert(JSON.stringify(this.graph))
+    syncParamSelected: function (output, prev) {
+      if(output === prev) {
+        this.duplicateParamNameError = ''
+        return
+      }
+      if(this.graph.nodeMap[this.nodeSelected].parameterMap[output] != undefined) {
+        this.duplicateParamNameError = this.getParamSelectionValue(this.nodeSelected, prev)
+        this.graph.nodeMap[this.nodeSelected].parameterMap[prev].parameterName = prev
+        return;
+      }
+
+      var currentState = this.graph.nodeMap[this.nodeSelected].parameterMap[prev]
+      this.$delete(this.graph.nodeMap[this.nodeSelected].parameterMap, prev)
+      this.$set(this.graph.nodeMap[this.nodeSelected].parameterMap, output, currentState)
+      this.setParamSelection(this.nodeSelected, output)
+    },
+    isParamError: function (parameterName) {
+      return this.duplicateParamNameError === this.getParamSelectionValue(this.nodeSelected, parameterName)
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
 h1, h2 {
   font-weight: normal;
