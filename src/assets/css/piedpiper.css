@@ -179,11 +179,8 @@ a {
 }
 
 .btn {
-  padding: 10px 20px;
-  display: inline-block;
   margin: 10px;
   font-size: 12px;
-  cursor: pointer;
 }
 
 .btn-danger {

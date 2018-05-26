@@ -35,7 +35,9 @@
               <div class="heading">
                 <editable v-model="node.nodeName" @input="syncNodeSelected(...arguments)" class="node-name editable-input"></editable>
                 <div class="node-type">Type:  {{node.nodeClass}}</div>
+                <div class="btn btn-danger btn-sm right" @click="deleteNode(node)">Delete Node</div>
                 <div class="alert alert-danger alert-nodename" v-if="isNodeError(node.nodeName)"><strong>Duplicate Node Name!</strong> Please provide a name which does not exist</div>
+
               </div>
               <div class="node-spec-container">
                 <span class="node-spec"> <a href="#">Interim</a> </span>
@@ -61,6 +63,7 @@
                 <div class="param-details-container" v-for="(parameter) in node.parameterMap" v-if="isParamSelected(node.nodeName, parameter.parameterName)" :key="parameter.parameterName">
                     <div class="heading">
                       <editable v-model="parameter.parameterName" @input="syncParamSelected(...arguments)" class="node-name editable-input"></editable>
+                      <div class="btn btn-danger btn-sm right" @click="deleteParam(node, parameter)">Delete Parameter</div>
                     </div>
                     <div class="alert alert-danger alert-nodename" v-if="isParamError(parameter.parameterName)"><strong>Duplicate Parameter Name!</strong> Please provide a name which does not exist</div>
                     <select v-model="parameter.parameterType" class="param-type">
@@ -140,6 +143,9 @@ export default {
       this.$set(this.graph.nodeMap, clonedNode.nodeName, clonedNode)
       this.setNodeSelection(clonedNode.nodeName)
     },
+    deleteNode: function (node) {
+      this.$delete(this.graph.nodeMap, node.nodeName)
+    },
     syncNodeSelected: function (output, prev) {
       if (output === prev) {
         this.duplicateNodeNameError = ''
@@ -172,8 +178,12 @@ export default {
       var paramMap = node.parameterMap
       var paramName = 'param' + (parseInt(Object.keys(paramMap).length) + 1)
       var newParameter = this.cloneJson(this.newParameterJsonTemplate)
+      newParameter.parameterName = paramName
       this.$set(paramMap, paramName, newParameter)
       this.setParamSelection(node.nodeName, paramName)
+    },
+    deleteParam: function (node, parameter) {
+      this.$delete(node.parameterMap, parameter.parameterName)
     },
     syncParamSelected: function (output, prev) {
       if (output === prev) {
