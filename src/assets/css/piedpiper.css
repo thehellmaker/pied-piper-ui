@@ -157,11 +157,6 @@ a {
   margin: -4px;
 }
 
-.create-api-container {
-  width: 95%;
-  margin: auto;
-}
-
 .create-api-container .nav {
   height: 200px;
 }
@@ -191,12 +186,15 @@ a {
   background-color: #4c8ac9;
 }
 
-.create-api-container {
-  margin-top: 20px;
+.card-container {
   background: white;
+  width: 95%;
+  margin: auto;
+  margin-top: 20px;
+  display: inline-block;
 }
 
-.create-api-container .heading {
+.card-container .heading {
   background-color: #49b5aa;
   color: white;
   font-size: 12px;
@@ -224,7 +222,7 @@ a {
   width: 25%;
 }
 
-.node-container .heading {
+.card-sub-container .heading{
   background: white;
   font-size: 12px;
   color: #AAA;
@@ -338,6 +336,25 @@ a {
   float: left;
   display: block;
 }
+.nav-actions-container {
+  display: inline-block;
+  width: 100%;
+}
 
+.explicit-input-each {
+  width: 100%;
+  text-align: left ;
+  margin: 10px!important;
+}
+
+.explicit-input-each .explicitValueName {
+  font-size: 12px;
+  margin-right: 20px;
+  font-weight: bold;
+}
+
+.graph-execution-container {
+  text-align: left;
+}
 
 
