@@ -11,16 +11,17 @@
         <div class="graph-explicit-inputs card-sub-container">
           <div class="heading">INPUTS</div>
           <ul>
-            <li class="explicit-input-each" v-for="eachExplicitValueAtRuntime in explicitValuesAtRuntime"
-                :key="eachExplicitValueAtRuntime">
-              <span class="explicitValueName">{{eachExplicitValueAtRuntime}}</span>
-              <input/>
+            <li class="explicit-input-each" v-for="(value, key) in inputValues"
+                :key="key">
+              <span class="explicitValueName">{{key}}</span>
+              <input v-model="inputValues[key]"/>
             </li>
           </ul>
         </div>
-        <div class="btn btn-primary"> Test </div>
+        <div class="btn btn-primary" @click="runGraph"> Run Graph </div>
         <div class="graph-output card-sub-container">
           <div class="heading">OUTPUT</div>
+          <div class="output-value">{{outputValue}}</div>
         </div>
         <div class="btn btn-sm btn-outline-primary left" @click="showExecution = !showExecution" v-if="showExecution">
           - Hide Details
@@ -74,13 +75,13 @@
                 </div>
               </div>
               <!--<div class="node-spec-container">-->
-                <!--<span class="node-spec"> <a href="#">Interim</a> </span>-->
-                <!--<span class="node-spec"> | </span>-->
-                <!--<span class="node-spec"> <a href="#">Enabled</a></span>-->
-                <!--<span class="node-spec"> | </span>-->
-                <!--<span class="node-spec"> <a href="#">Do not use cached data</a></span>-->
-                <!--<span class="node-spec"> | </span>-->
-                <!--<span class="node-spec"> <a href="#">Fan out</a></span>-->
+              <!--<span class="node-spec"> <a href="#">Interim</a> </span>-->
+              <!--<span class="node-spec"> | </span>-->
+              <!--<span class="node-spec"> <a href="#">Enabled</a></span>-->
+              <!--<span class="node-spec"> | </span>-->
+              <!--<span class="node-spec"> <a href="#">Do not use cached data</a></span>-->
+              <!--<span class="node-spec"> | </span>-->
+              <!--<span class="node-spec"> <a href="#">Fan out</a></span>-->
               <!--</div>-->
               <div class="add-parameter-container">
                 <div id="add-parameter" class="btn btn-primary" @click="addParam(node)"> Add Parameter </div>
@@ -101,14 +102,15 @@
                   <div class="heading">
                     <editable v-model="parameter.parameterName" @input="syncParamSelected(...arguments)"
                               class="node-name editable-input"></editable>
-                    <div class="btn btn-outline-danger btn-sm right" v-if="!parameter.required" @click="deleteParam(node, parameter)">
+                    <div class="btn btn-outline-danger btn-sm right" v-if="!parameter.required"
+                         @click="deleteParam(node, parameter)">
                       Delete Parameter
                     </div>
                   </div>
                   <div class="alert alert-danger alert-nodename" v-if="isParamError(parameter.parameterName)"><strong>Duplicate Parameter Name!</strong>
                     Please provide a name which does not exist
                   </div>
-                  <select v-model="parameter.parameterType" class="param-type">
+                  <select v-model="parameter.parameterType" class="param-type" @change="checkIfValueAtRuntime">
                     <template v-for="parameterType in parameterTypes">
                       <option v-bind:key="parameterType">
                         {{parameterType}}
@@ -136,156 +138,169 @@
 </template>
 
 <script>
-  import editable from './Editable.vue'
-  export default {
-    name: 'PiedPiper',
-    components: {
-      'editable': editable
+import editable from './Editable.vue'
+export default {
+  name: 'PiedPiper',
+  components: {
+    'editable': editable
+  },
+  data () {
+    return {
+      graph: {},
+      parameterTypes: ['CONSTANT', 'REFERENCE_FROM_ANOTHER_NODE', 'VALUE_SPECIFIED_AT_RUNTIME'],
+      paramSelected: '',
+      nodeSelected: '',
+      duplicateNodeNameError: '',
+      duplicateParamNameError: '',
+      editField: '',
+      availableNodes: [],
+      newParameterJsonTemplate: {
+        'parameterName': '',
+        'parameterType': 'CONSTANT',
+        'parameterValue': '',
+        'referenceNodeName': ''
+      },
+      showExecution: false,
+      inputValues: {},
+      outputValue: ''
+    }
+  },
+  methods: {
+    printGraph: function () {
+      console.log(JSON.stringify(this.graph))
     },
-    data () {
-      return {
-        graph: {},
-        parameterTypes: ['CONSTANT', 'REFERENCE_FROM_ANOTHER_NODE', 'VALUE_SPECIFIED_AT_RUNTIME'],
-        paramSelected: '',
-        nodeSelected: '',
-        duplicateNodeNameError: '',
-        duplicateParamNameError: '',
-        editField: '',
-        availableNodes: [],
-        newParameterJsonTemplate: {
-          'parameterName': '',
-          'parameterType': 'CONSTANT',
-          'parameterValue': '',
-          'referenceNodeName': ''
-        },
-        showExecution: false
+    getNodeSelectionValue: function (nodeName) {
+      return nodeName
+    },
+    setNodeSelection: function (nodeName) {
+      this.nodeSelected = this.getNodeSelectionValue(nodeName)
+    },
+    isNodeSelected: function (nodeName) {
+      return this.nodeSelected === this.getNodeSelectionValue(nodeName)
+    },
+    isNodeError: function (nodeName) {
+      return this.duplicateNodeNameError === this.getNodeSelectionValue(nodeName)
+    },
+    addNode: function (node) {
+      if (this.graph.nodeMap === undefined) {
+        this.$set(this.graph, 'nodeMap', {})
       }
+      var clonedNode = this.cloneJson(node)
+      clonedNode.nodeName = 'Node' + (parseInt(Object.keys(this.graph.nodeMap).length) + 1)
+      clonedNode.parameterMap = {}
+      var vm = this
+      clonedNode.parameterMetadataList.forEach(function (element) {
+        var newParameter = vm.cloneJson(vm.newParameterJsonTemplate)
+        newParameter.parameterName = element.parameterName
+        newParameter.required = element.required
+        clonedNode.parameterMap[newParameter.parameterName] = newParameter
+      })
+      this.$set(this.graph.nodeMap, clonedNode.nodeName, clonedNode)
+      this.setNodeSelection(clonedNode.nodeName)
     },
-    methods: {
-      printGraph: function () {
-        alert(JSON.stringify(this.graph))
-      },
-      getNodeSelectionValue: function (nodeName) {
-        return nodeName
-      },
-      setNodeSelection: function (nodeName) {
-        this.nodeSelected = this.getNodeSelectionValue(nodeName)
-      },
-      isNodeSelected: function (nodeName) {
-        return this.nodeSelected === this.getNodeSelectionValue(nodeName)
-      },
-      isNodeError: function (nodeName) {
-        return this.duplicateNodeNameError === this.getNodeSelectionValue(nodeName)
-      },
-      addNode: function (node) {
-        if (this.graph.nodeMap === undefined) {
-          this.$set(this.graph, 'nodeMap', {})
-        }
-        var clonedNode = this.cloneJson(node)
-        clonedNode.nodeName = 'Node' + (parseInt(Object.keys(this.graph.nodeMap).length) + 1)
-        clonedNode.parameterMap = {}
-        var vm = this
-        clonedNode.parameterMetadataList.forEach(function (element) {
-          var newParameter = vm.cloneJson(vm.newParameterJsonTemplate)
-          newParameter.parameterName = element.parameterName
-          newParameter.required = element.required
-          clonedNode.parameterMap[newParameter.parameterName] = newParameter
-        })
-        this.$set(this.graph.nodeMap, clonedNode.nodeName, clonedNode)
-        this.setNodeSelection(clonedNode.nodeName)
-      },
-      deleteNode: function (node) {
-        this.$delete(this.graph.nodeMap, node.nodeName)
-      },
-      syncNodeSelected: function (output, prev) {
-        if (output === prev) {
-          this.duplicateNodeNameError = ''
-          return
-        }
-        if (this.graph.nodeMap[output] !== undefined) {
-          this.duplicateNodeNameError = this.getNodeSelectionValue(prev)
-          this.graph.nodeMap[prev].nodeName = prev
-          return
-        }
-
-        var currentState = this.graph.nodeMap[prev]
-        this.$delete(this.graph.nodeMap, prev)
-        this.$set(this.graph.nodeMap, output, currentState)
-        this.setNodeSelection(output)
-      },
-      getParamSelectionValue: function (nodeName, parameterName) {
-        return parameterName
-      },
-      setParamSelection: function (nodeName, parameterName) {
-        this.paramSelected = this.getParamSelectionValue(nodeName, parameterName)
-      },
-      isParamSelected: function (nodeName, parameterName) {
-        return this.paramSelected === this.getParamSelectionValue(nodeName, parameterName)
-      },
-      addParam: function (node) {
-        if (node.parameterMap === undefined) {
-          this.$set(node, 'parameterMap', {})
-        }
-        var paramMap = node.parameterMap
-        var paramName = 'param' + (parseInt(Object.keys(paramMap).length) + 1)
-        var newParameter = this.cloneJson(this.newParameterJsonTemplate)
-        newParameter.parameterName = paramName
-        this.$set(paramMap, paramName, newParameter)
-        this.setParamSelection(node.nodeName, paramName)
-      },
-      deleteParam: function (node, parameter) {
-        this.$delete(node.parameterMap, parameter.parameterName)
-      },
-      syncParamSelected: function (output, prev) {
-        if (output === prev) {
-          this.duplicateParamNameError = ''
-          return
-        }
-        if (this.graph.nodeMap[this.nodeSelected].parameterMap[output] !== undefined) {
-          this.duplicateParamNameError = this.getParamSelectionValue(this.nodeSelected, prev)
-          this.graph.nodeMap[this.nodeSelected].parameterMap[prev].parameterName = prev
-          return
-        }
-
-        var currentState = this.graph.nodeMap[this.nodeSelected].parameterMap[prev]
-        this.$delete(this.graph.nodeMap[this.nodeSelected].parameterMap, prev)
-        this.$set(this.graph.nodeMap[this.nodeSelected].parameterMap, output, currentState)
-        this.setParamSelection(this.nodeSelected, output)
-      },
-      isParamError: function (parameterName) {
-        return this.duplicateParamNameError === this.getParamSelectionValue(this.nodeSelected, parameterName)
-      },
-      getNodeTypes: function () {
-        this.$http.get('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/nodetypes').then(function (response) {
-          this.availableNodes = JSON.parse(response.data)
-        }, function (error) {
-          console.log(error.statusText)
-        })
-      },
-      cloneJson: function (jsonObject) {
-        return JSON.parse(JSON.stringify(jsonObject))
+    deleteNode: function (node) {
+      this.$delete(this.graph.nodeMap, node.nodeName)
+    },
+    syncNodeSelected: function (output, prev) {
+      if (output === prev) {
+        this.duplicateNodeNameError = ''
+        return
       }
+      if (this.graph.nodeMap[output] !== undefined) {
+        this.duplicateNodeNameError = this.getNodeSelectionValue(prev)
+        this.graph.nodeMap[prev].nodeName = prev
+        return
+      }
+
+      var currentState = this.graph.nodeMap[prev]
+      this.$delete(this.graph.nodeMap, prev)
+      this.$set(this.graph.nodeMap, output, currentState)
+      this.setNodeSelection(output)
     },
-    mounted: function () {
-      this.getNodeTypes()
+    getParamSelectionValue: function (nodeName, parameterName) {
+      return parameterName
     },
-    computed: {
-      explicitValuesAtRuntime: function () {
-        var explicitValues = []
-        if (this.graph.nodeMap === undefined) return explicitValues
+    setParamSelection: function (nodeName, parameterName) {
+      this.paramSelected = this.getParamSelectionValue(nodeName, parameterName)
+    },
+    isParamSelected: function (nodeName, parameterName) {
+      return this.paramSelected === this.getParamSelectionValue(nodeName, parameterName)
+    },
+    addParam: function (node) {
+      if (node.parameterMap === undefined) {
+        this.$set(node, 'parameterMap', {})
+      }
+      var paramMap = node.parameterMap
+      var paramName = 'param' + (parseInt(Object.keys(paramMap).length) + 1)
+      var newParameter = this.cloneJson(this.newParameterJsonTemplate)
+      newParameter.parameterName = paramName
+      this.$set(paramMap, paramName, newParameter)
+      this.setParamSelection(node.nodeName, paramName)
+    },
+    deleteParam: function (node, parameter) {
+      this.$delete(node.parameterMap, parameter.parameterName)
+    },
+    syncParamSelected: function (output, prev) {
+      if (output === prev) {
+        this.duplicateParamNameError = ''
+        return
+      }
+      if (this.graph.nodeMap[this.nodeSelected].parameterMap[output] !== undefined) {
+        this.duplicateParamNameError = this.getParamSelectionValue(this.nodeSelected, prev)
+        this.graph.nodeMap[this.nodeSelected].parameterMap[prev].parameterName = prev
+        return
+      }
+
+      var currentState = this.graph.nodeMap[this.nodeSelected].parameterMap[prev]
+      this.$delete(this.graph.nodeMap[this.nodeSelected].parameterMap, prev)
+      this.$set(this.graph.nodeMap[this.nodeSelected].parameterMap, output, currentState)
+      this.setParamSelection(this.nodeSelected, output)
+    },
+    isParamError: function (parameterName) {
+      return this.duplicateParamNameError === this.getParamSelectionValue(this.nodeSelected, parameterName)
+    },
+    getNodeTypes: function () {
+      this.$http.get('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/nodetypes').then(function (response) {
+        this.availableNodes = JSON.parse(response.data)
+      }, function (error) {
+        console.log(error.statusText)
+      })
+    },
+    cloneJson: function (jsonObject) {
+      return JSON.parse(JSON.stringify(jsonObject))
+    },
+    runGraph: function () {
+      var executeGraphInput = {
+        graph: this.graph,
+        input: this.inputValues
+      }
+      this.$http.post('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/graph/run', executeGraphInput).then(function (successEvent) {
+        this.outputValue = JSON.stringify(successEvent)
+      }, function (errorEvent) {
+        this.outputValue = JSON.stringify(errorEvent)
+      })
+    },
+    checkIfValueAtRuntime: function () {
+      var explicitValues = {}
+      if (this.graph.nodeMap !== undefined) {
         var graphLocal = this.graph
         Object.keys(this.graph.nodeMap).forEach(function (nodeName) {
           var nodeValue = graphLocal.nodeMap[nodeName]
-          if (nodeValue.parameterMap === undefined) return;
-          Object.keys(nodeValue.parameterMap).forEach(function (paramName) {
-            var paramValue = nodeValue.parameterMap[paramName]
-            if (paramValue.parameterType === 'VALUE_SPECIFIED_AT_RUNTIME') explicitValues.push(paramValue.parameterName)
-          })
+          if (nodeValue.parameterMap !== undefined) {
+            Object.keys(nodeValue.parameterMap).forEach(function (paramName) {
+              var paramValue = nodeValue.parameterMap[paramName]
+              if (paramValue.parameterType === 'VALUE_SPECIFIED_AT_RUNTIME') explicitValues[paramValue.parameterName] = ''
+            })
+          }
         })
-        return explicitValues
       }
+      this.$set(this, 'inputValues', explicitValues)
     }
+  },
+  mounted: function () {
+    this.getNodeTypes()
   }
+}
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->

@@ -357,4 +357,11 @@ a {
   text-align: left;
 }
 
+.output-value {
+  overflow: scroll;
+  height: 200px;
+  margin: 30px;
+  background-color: #FEFEFE;
+}
+
 
