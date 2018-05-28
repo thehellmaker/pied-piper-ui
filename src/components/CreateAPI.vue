@@ -35,14 +35,23 @@
         <div class="nav-actions-container">
           <div class="nav-actions left">
             <span>
-              <editable v-model="graph.projectName" placeholder="PROJECT NAME"
-                        class="editable-input project-heading"></editable>
-              <editable v-model="graph.graphName" placeholder="GRAPH NAME"
-                        class="editable-input project-heading"></editable>
+              <div class="project-heading">
+                <div class="heading">PROJECT NAME</div>
+                <editable v-model="graph.projectName"
+                          class="editable-input"></editable>
+              </div>
+              <div class="project-heading">
+                <div class="heading">GRAPH NAME</div>
+                <editable v-model="graph.graphName"
+                          class="editable-input"></editable>
+              </div><br/>
+              <div class="nav-action-alert alert alert-danger" v-if="!validGraph"><strong>ProjectName/GraphName is empty !!!</strong> Please Edit the project name</div>
+              <div class="nav-action-alert alert alert-danger" v-if="saveGraphError"><strong>Save Error !!!</strong> An Error Occurred when attrmpting to save the graph</div>
+              <div class="nav-action-alert alert alert-success" v-if="saveGraphSuccess"><strong>Save Success !!!</strong> The graph has been successfully saved</div>
             </span>
           </div>
           <div class="nav-actions right">
-            <div class="btn btn-danger" @click="printGraph()"> Save </div>
+            <div class="btn btn-danger" @click="saveGraph"> Save </div>
             <b-dropdown id="ddown1" text="Add Node" right class="m-md-2" variant="success">
               <b-dropdown-item v-for="(node) in availableNodes" :key="node.nodeName" @click="addNode(node)">
                 {{node.nodeClass}}
@@ -147,7 +156,7 @@ export default {
   data () {
     return {
       graph: {},
-      parameterTypes: ['CONSTANT', 'REFERENCE_FROM_ANOTHER_NODE', 'VALUE_SPECIFIED_AT_RUNTIME'],
+      parameterTypes: ['CONSTANT', 'REFERENCE_FROM_ANOTHER_NODE', 'VALUE_SPECIFIED_AT_RUNTIME', 'AWS_SSM  '],
       paramSelected: '',
       nodeSelected: '',
       duplicateNodeNameError: '',
@@ -162,7 +171,9 @@ export default {
       },
       showExecution: false,
       inputValues: {},
-      outputValue: ''
+      outputValue: '',
+      saveGraphError: false,
+      saveGraphSuccess: false
     }
   },
   methods: {
@@ -295,10 +306,33 @@ export default {
         })
       }
       this.$set(this, 'inputValues', explicitValues)
+    },
+    isNotBlank: function (stringValue) {
+      return stringValue !== undefined && stringValue.trim() !== ''
+    },
+    saveGraph: function () {
+      if (!this.validGraph) return
+      var saveGraphInput = {
+        graph: this.graph,
+        tableName: 'AlmightyTable'
+      }
+      this.saveGraphSuccess = false
+      this.$http.put('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/graph', saveGraphInput).then(function (successEvent) {
+        this.saveGraphError = false
+        this.saveGraphSuccess = true
+      }, function (errorEvent) {
+        this.saveGraphError = true
+        this.saveGraphSuccess = false
+      })
     }
   },
   mounted: function () {
     this.getNodeTypes()
+  },
+  computed: {
+    validGraph: function () {
+      return this.isNotBlank(this.graph.graphName) && this.isNotBlank(this.graph.projectName)
+    }
   }
 }
 </script>

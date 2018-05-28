@@ -6,7 +6,7 @@ export default {
   props: ['value', 'placeholder'],
   computed: {
     defaultedValue () {
-      return this.value || this.placeholder.trim()
+      return this.value || ''
     }
   },
   mounted: function () {

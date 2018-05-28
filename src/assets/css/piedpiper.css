@@ -163,10 +163,11 @@ a {
 
 .editable-input {
   background: transparent;
-  margin: 30px;
+  margin: 5px 0px;
   padding: 10px 40px;
   border: 1px dashed dodgerblue;
   font-size: 11px;
+  min-width: 140px;
 }
 
 .red-input::placeholder {
@@ -222,7 +223,7 @@ a {
   width: 25%;
 }
 
-.card-sub-container .heading{
+.card-sub-container .heading, .project-heading .heading {
   background: white;
   font-size: 12px;
   color: #AAA;
@@ -335,6 +336,8 @@ a {
 .project-heading {
   float: left;
   display: block;
+  margin-left: 30px;
+  text-align: left;
 }
 .nav-actions-container {
   display: inline-block;
@@ -362,6 +365,11 @@ a {
   height: 200px;
   margin: 30px;
   background-color: #FEFEFE;
+}
+
+.nav-action-alert {
+  float: left;
+  margin: 10px 30px;
 }
 
 

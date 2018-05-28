@@ -12,7 +12,7 @@ export default new Router({
       component: SearchAPI
     },
     {
-      path: '/create/api',
+      path: '/api',
       name: CreateAPI,
       component: CreateAPI
     }
