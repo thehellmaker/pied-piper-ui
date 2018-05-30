@@ -3,8 +3,8 @@
     <div class="nav">
       <img class="logo" src="./assets/logo-notext.jpg" />
       <div class="logo-text"> PIED PIPER</div>
-      <div class="bordered-button nav-button bordered-button-red"> <a class="no-link" href="/#/api">CREATE API</a> </div>
-      <div class="nav-button"> <a class="no-link" href="/#/"> SEARCH APIs </a>  </div>
+      <a class="no-link" href="/#/api"><div class="nav-button btn btn-outline-danger"> CREATE API</div></a>
+      <a class="no-link" href="/#/api"><div class="nav-button btn btn-outline-secondary"> SEARCH APIs</div></a>
     </div>
     <router-view/>
   </div>

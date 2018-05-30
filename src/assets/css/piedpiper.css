@@ -45,7 +45,7 @@ body {
   padding: 10px;
   margin: 18px 30px;
   float: right;
-  font-size: 10px;
+  font-size: 11px!important;
   cursor: pointer;
 }
 
