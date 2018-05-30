@@ -20,6 +20,11 @@ export default {
       if (oldValue !== undefined) oldValue = oldValue.trim()
       this.$emit('input', newValue, oldValue)
     }
+  },
+  watch: {
+    value: function (changedValue) {
+      this.$el.innerText = changedValue
+    }
   }
 }
 </script>

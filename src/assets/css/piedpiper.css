@@ -70,16 +70,13 @@ body {
 .search-view .content {
   margin: 25px 0px;
 }
-
 .search-box {
-  display: inline-block;
+  margin-bottom: 40px;
 }
-
 .search-box .search-text {
-  float: left;
   height: 38px;
-  width: 71%;
   padding: 0px 10px;
+  margin-bottom: 20px;
 }
 
 .search-box .search-text::placeholder {
@@ -124,8 +121,8 @@ body {
 }
 
 .api-list-view .content-table {
-  width: 100%;
-  margin: 20px 0px;
+  width: 90%;
+  margin: 20px 20px;
 }
 
 .api-list-view .content-table th {
@@ -140,8 +137,13 @@ body {
   font-weight: bold;
 }
 
+.api-list-view .content-table td, .api-list-view .content-table th {
+  text-align: left;
+}
+
 .api-list-view .api-project-name {
   color: #AAA;
+  cursor: pointer;
 }
 
 .api-list-view .api-name {

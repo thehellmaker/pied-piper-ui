@@ -324,10 +324,28 @@ export default {
         this.saveGraphError = true
         this.saveGraphSuccess = false
       })
+    },
+    fetchGraphFromQueryParameters: function () {
+      if (this.isNotBlank(this.$route.query.projectName) && this.isNotBlank(this.$route.query.graphName)) {
+        var searchGraphInput = {
+          tableName: 'AlmightyTable',
+          projectName: this.$route.query.projectName,
+          graphName: this.$route.query.graphName
+        }
+        this.$http.post('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/graph/search', searchGraphInput).then(function (successEvent) {
+          var output = JSON.parse(successEvent.data).output
+          if (output.length === 0) return
+          var graph = JSON.parse(output[0].graph)
+          this.$set(this, 'graph', graph)
+        }, function (errorEvent) {
+          console.log(errorEvent)
+        })
+      }
     }
   },
   mounted: function () {
     this.getNodeTypes()
+    this.fetchGraphFromQueryParameters()
   },
   computed: {
     validGraph: function () {
