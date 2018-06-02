@@ -21,7 +21,7 @@
         <div class="btn btn-primary" @click="runGraph"> Run Graph </div>
         <div class="graph-output card-sub-container">
           <div class="heading">OUTPUT</div>
-          <div class="output-value">{{outputValue}}</div>
+          <tree-view :data="outputValue"></tree-view>
         </div>
         <div class="btn btn-sm btn-outline-primary left" @click="showExecution = !showExecution" v-if="showExecution">
           - Hide Details
@@ -171,7 +171,7 @@ export default {
       },
       showExecution: false,
       inputValues: {},
-      outputValue: '',
+      outputValue: {},
       saveGraphError: false,
       saveGraphSuccess: false
     }
@@ -286,9 +286,9 @@ export default {
         input: this.inputValues
       }
       this.$http.post('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/graph/run', executeGraphInput).then(function (successEvent) {
-        this.outputValue = JSON.stringify(successEvent)
+        this.outputValue = JSON.parse(successEvent.data)
       }, function (errorEvent) {
-        this.outputValue = JSON.stringify(errorEvent)
+        this.outputValue = JSON.parse(errorEvent.data)
       })
     },
     checkIfValueAtRuntime: function () {
@@ -337,6 +337,7 @@ export default {
           if (output.length === 0) return
           var graph = JSON.parse(output[0].graph)
           this.$set(this, 'graph', graph)
+          this.checkIfValueAtRuntime()
         }, function (errorEvent) {
           console.log(errorEvent)
         })

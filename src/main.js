@@ -7,10 +7,14 @@ import router from './router'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Resource from 'vue-resource'
+import TreeView from 'vue-json-tree-view'
+
 require('./assets/css/piedpiper.css')
 Vue.config.productionTip = false
+
 Vue.use(BootstrapVue)
 Vue.use(Resource)
+Vue.use(TreeView)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

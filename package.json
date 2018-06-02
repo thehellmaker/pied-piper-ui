@@ -17,6 +17,7 @@
     "bootstrap-vue": "^2.0.0-rc.9",
     "semantic-ui-css": "^2.3.1",
     "vue": "^2.5.2",
+    "vue-json-tree-view": "^2.1.4",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1"
   },
