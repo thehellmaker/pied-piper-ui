@@ -89,7 +89,16 @@ export default {
       this.graphName = ''
       this.searchTerm = searchTerm
       this.search()
+    },
+    triggerScan: function () {
+      this.projectName = ''
+      this.graphName = ''
+      this.searchTerm = ''
+      this.search()
     }
+  },
+  mounted: function () {
+    this.search()
   }
 }
 </script>
