@@ -18,7 +18,8 @@
             </li>
           </ul>
         </div>
-        <div class="btn btn-primary" @click="runGraph"> Run Graph </div>
+        <div class="btn btn-primary" @click="runGraph" v-if="!runInProgress"> Run Graph </div>
+        <div class="btn btn-primary" v-if="runInProgress"> Running </div>
         <div class="graph-output card-sub-container">
           <div class="heading">OUTPUT</div>
           <tree-view :data="outputValue"></tree-view>
@@ -51,7 +52,8 @@
             </span>
           </div>
           <div class="nav-actions right">
-            <div class="btn btn-danger" @click="saveGraph"> Save </div>
+            <div class="btn btn-danger" @click="saveGraph" v-if="!saveInProgress"> Save </div>
+            <div class="btn btn-danger" v-if="saveInProgress"> Saving </div>
             <b-dropdown id="ddown1" text="Add Node" right class="m-md-2" variant="success">
               <b-dropdown-item v-for="(node) in availableNodes" :key="node.nodeName" @click="addNode(node)">
                 {{node.nodeClass}}
@@ -173,7 +175,9 @@ export default {
       inputValues: {},
       outputValue: {},
       saveGraphError: false,
-      saveGraphSuccess: false
+      saveGraphSuccess: false,
+      saveInProgress: false,
+      runInProgress: false
     }
   },
   methods: {
@@ -281,14 +285,17 @@ export default {
       return JSON.parse(JSON.stringify(jsonObject))
     },
     runGraph: function () {
+      this.runInProgress = true
       var executeGraphInput = {
         graph: this.graph,
         input: this.inputValues
       }
       this.$http.post('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/graph/run', executeGraphInput).then(function (successEvent) {
         this.outputValue = JSON.parse(successEvent.data)
+        this.runInProgress = false
       }, function (errorEvent) {
         this.outputValue = JSON.parse(errorEvent.data)
+        this.runInProgress = false
       })
     },
     checkIfValueAtRuntime: function () {
@@ -312,6 +319,7 @@ export default {
     },
     saveGraph: function () {
       if (!this.validGraph) return
+      this.saveInProgress = true
       var saveGraphInput = {
         graph: this.graph,
         tableName: 'AlmightyTable'
@@ -320,9 +328,11 @@ export default {
       this.$http.put('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/graph', saveGraphInput).then(function (successEvent) {
         this.saveGraphError = false
         this.saveGraphSuccess = true
+        this.saveInProgress = false
       }, function (errorEvent) {
         this.saveGraphError = true
         this.saveGraphSuccess = false
+        this.saveInProgress = false
       })
     },
     fetchGraphFromQueryParameters: function () {
