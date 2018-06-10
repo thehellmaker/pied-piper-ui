@@ -208,6 +208,7 @@ export default {
         var newParameter = vm.cloneJson(vm.newParameterJsonTemplate)
         newParameter.parameterName = element.parameterName
         newParameter.required = element.required
+        newParameter.allowedValues = element.allowedValues
         clonedNode.parameterMap[newParameter.parameterName] = newParameter
       })
       this.$set(this.graph.nodeMap, clonedNode.nodeName, clonedNode)
