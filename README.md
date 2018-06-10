@@ -1,6 +1,6 @@
 # pied-piper-ui
 
-> Frontend for pied-piper project which lets you build api from the UI
+> Frontend for pied-piper project which lets you build api from the UI. A test link can be found at http://piedpiper.thehellmaker.com
 
 ## Build Setup
 
