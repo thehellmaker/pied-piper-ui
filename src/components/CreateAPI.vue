@@ -121,23 +121,34 @@
                   <div class="alert alert-danger alert-nodename" v-if="isParamError(parameter.parameterName)"><strong>Duplicate Parameter Name!</strong>
                     Please provide a name which does not exist
                   </div>
-                  <select v-model="parameter.parameterType" class="param-type" @change="checkIfValueAtRuntime">
-                    <template v-for="parameterType in parameterTypes">
-                      <option v-bind:key="parameterType">
-                        {{parameterType}}
-                      </option>
-                    </template>
-                  </select>
-                  <select v-if="parameter.parameterType == 'REFERENCE_FROM_ANOTHER_NODE'"
-                          v-model="parameter.referenceNodeName" class="param-reference-node">
-                    <option v-for="(node) in graph.nodeMap" :key="node.nodeName">
-                      {{node.nodeName}}
-                    </option>
-                  </select>
-                  <div v-if="parameter.parameterType != 'VALUE_SPECIFIED_AT_RUNTIME'" class="constant-field-container">
-                    <textarea type="Text" placeholder="Constant value here" class="constant-field"
-                              v-model="parameter.parameterValue"/>
+
+                  <div v-if="getViewType(parameter) === 'DROPDOWN'">
+                    <select class="left" v-model="parameter.parameterValue">
+                      <option v-for="allowedValue in parameter.allowedValues" :value="allowedValue" :key="allowedValue">{{allowedValue}}</option>
+                    </select>
                   </div>
+
+                  <div v-else>
+                    <select v-model="parameter.parameterType" class="param-type" @change="checkIfValueAtRuntime">
+                      <template v-for="parameterType in parameterTypes">
+                        <option v-bind:key="parameterType">
+                          {{parameterType}}
+                        </option>
+                      </template>
+                    </select>
+                    <select v-if="parameter.parameterType == 'REFERENCE_FROM_ANOTHER_NODE'"
+                            v-model="parameter.referenceNodeName" class="param-reference-node">
+                      <option v-for="(node) in graph.nodeMap" :key="node.nodeName">
+                        {{node.nodeName}}
+                      </option>
+                    </select>
+                    <div class="constant-field-container">
+                      <textarea type="Text" placeholder="Constant value here" class="constant-field"
+                                v-model="parameter.parameterValue"/>
+                    </div>
+                    <br/>
+                  </div>
+
                   <div class="add-parameter-attr-container">
                     <div class="add-parameter-attr btn btn-primary" @click="addAttribute(parameter)"> Add Attribute </div>
                   </div>
@@ -286,6 +297,17 @@ export default {
     },
     isParamError: function (parameterName) {
       return this.duplicateParamNameError === this.getParamSelectionValue(this.nodeSelected, parameterName)
+    },
+    getViewType: function (parameter) {
+      if (parameter.parameterType === 'VALUE_SPECIFIED_AT_RUNTIME') {
+        return 'NONE'
+      } else if (parameter.parameterType === 'CONSTANT' || parameter.parameterType === 'REFERENCE_FROM_ANOTHER_NODE') {
+        if (parameter.allowedValues !== undefined && parameter.allowedValues.length > 0) {
+          return 'DROPDOWN'
+        } else {
+          return 'TEXT_AREA'
+        }
+      }
     },
     addAttribute: function (parameter) {
       if (parameter.attributeMap === undefined) {
