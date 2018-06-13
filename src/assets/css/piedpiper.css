@@ -279,12 +279,12 @@ a {
   padding: 0px 10px;
 }
 
-.add-parameter-container {
+.add-parameter-attr-container {
   display: inline-block;
   width: 100%;
 }
 
-#add-parameter {
+.add-parameter-attr {
   float: right;
 }
 

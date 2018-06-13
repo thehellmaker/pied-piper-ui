@@ -94,8 +94,8 @@
               <!--<span class="node-spec"> | </span>-->
               <!--<span class="node-spec"> <a href="#">Fan out</a></span>-->
               <!--</div>-->
-              <div class="add-parameter-container">
-                <div id="add-parameter" class="btn btn-primary" @click="addParam(node)"> Add Parameter </div>
+              <div class="add-parameter-attr-container">
+                <div class="add-parameter-attr btn btn-primary" @click="addParam(node)"> Add Parameter </div>
               </div>
               <div class="parameter-container">
                 <div class="param-list-container">
@@ -138,6 +138,20 @@
                     <textarea type="Text" placeholder="Constant value here" class="constant-field"
                               v-model="parameter.parameterValue"/>
                   </div>
+                  <div class="add-parameter-attr-container">
+                    <div class="add-parameter-attr btn btn-primary" @click="addAttribute(parameter)"> Add Attribute </div>
+                  </div>
+                  <table v-if="isShowAttributeMapSection(parameter)">
+                    <tr>
+                      <th>ATTRIBUTE NAME</th>
+                      <th>ATTRIBUTE VALUE</th>
+                    </tr>
+                    <tr v-for="(attrValue, attrName) in parameter.attributeMap" :key="attrName">
+                      <td><input placeholder="AttributeName" :value="attrName" @focus="focusAttribute" @blur="blurAttribute($event, parameter)"/></td>
+                      <td><input placeholder="AttributeValue" :value="attrValue" @change="syncAttributeValue(parameter, attrName, $event.target.value)" /></td>
+                      <td><div class="btn btn-outline-danger" @click="deleteAttribute(parameter, attrName)"> Delete Attribute</div></td>
+                    </tr>
+                  </table>
                 </div>
               </div>
             </template>
@@ -177,13 +191,11 @@ export default {
       saveGraphError: false,
       saveGraphSuccess: false,
       saveInProgress: false,
-      runInProgress: false
+      runInProgress: false,
+      attributePrevValue: ''
     }
   },
   methods: {
-    printGraph: function () {
-      console.log(JSON.stringify(this.graph))
-    },
     getNodeSelectionValue: function (nodeName) {
       return nodeName
     },
@@ -274,6 +286,35 @@ export default {
     },
     isParamError: function (parameterName) {
       return this.duplicateParamNameError === this.getParamSelectionValue(this.nodeSelected, parameterName)
+    },
+    addAttribute: function (parameter) {
+      if (parameter.attributeMap === undefined) {
+        this.$set(parameter, 'attributeMap', {})
+      }
+      var attributeMap = parameter.attributeMap
+      var attributeName = 'attribute' + (parseInt(Object.keys(attributeMap).length) + 1)
+      this.$set(attributeMap, attributeName, '')
+    },
+    isShowAttributeMapSection: function (parameter) {
+      return parameter.attributeMap !== undefined && Object.keys(parameter.attributeMap).length > 0
+    },
+    blurAttribute: function (event, parameter) {
+      var newAttributeName = event.target.value
+      var oldAttributeName = this.attributeSelection
+      if (oldAttributeName !== newAttributeName) {
+        var value = parameter.attributeMap[oldAttributeName]
+        this.$delete(parameter.attributeMap, oldAttributeName)
+        this.$set(parameter.attributeMap, newAttributeName, value)
+      }
+    },
+    focusAttribute: function (event) {
+      this.attributeSelection = event.target.value
+    },
+    syncAttributeValue: function (parameter, attributeName, attributeValue) {
+      parameter.attributeMap[attributeName] = attributeValue
+    },
+    deleteAttribute: function (parameter, attributeName) {
+      this.$delete(parameter.attributeMap, attributeName)
     },
     getNodeTypes: function () {
       this.$http.get('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/nodetypes').then(function (response) {
