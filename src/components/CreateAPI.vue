@@ -349,6 +349,7 @@ export default {
       return JSON.parse(JSON.stringify(jsonObject))
     },
     runGraph: function () {
+      console.log(JSON.stringify(this.graph))
       this.runInProgress = true
       var executeGraphInput = {
         graph: this.graph,
@@ -358,7 +359,7 @@ export default {
         this.outputValue = JSON.parse(successEvent.data)
         this.runInProgress = false
       }, function (errorEvent) {
-        this.outputValue = JSON.parse(errorEvent.data)
+        this.outputValue = errorEvent.data
         this.runInProgress = false
       })
     },
