@@ -152,7 +152,7 @@
                       </option>
                     </select>
                     <div class="constant-field-container">
-                      <editor  v-model="parameter.parameterValue" @init="editorInit" theme="chrome" width="500" height="100"></editor>
+                      <editor  v-model="parameter.parameterValue" @init="editorInit" theme="chrome" width="100%" height="100"></editor>
                     </div>
                     <br/>
                   </div>
@@ -378,7 +378,6 @@ export default {
       this.$http.get('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/nodetypes').then(function (response) {
         this.availableNodes = JSON.parse(response.data)
       }, function (error) {
-        console.log(error.statusText)
       })
     },
     cloneJson: function (jsonObject) {
@@ -449,7 +448,6 @@ export default {
           this.$set(this, 'graph', graph)
           this.checkIfValueAtRuntime()
         }, function (errorEvent) {
-          console.log(errorEvent)
         })
       }
     }

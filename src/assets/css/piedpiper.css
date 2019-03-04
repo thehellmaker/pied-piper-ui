@@ -310,8 +310,9 @@ a {
 
 .constant-field-container {
   float: left;
-  margin-top: 20px;
+  padding: 20px 20px 20px 0px;
   width: 100%;
+
 }
 
 .constant-field {
