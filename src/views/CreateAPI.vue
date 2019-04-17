@@ -124,7 +124,12 @@
 
                   <div v-if="getViewType(parameter) === 'DROPDOWN'">
                     <select class="left" v-model="parameter.parameterValue">
-                      <option v-for="allowedValue in parameter.allowedValues" :value="allowedValue" :key="allowedValue">{{allowedValue}}</option>
+                      <template v-if="parameter.parameterName === 'method'">
+                        <option v-for="allowedValue in restMethods" :value="allowedValue" :key="allowedValue">{{allowedValue}}</option>
+                      </template>
+                      <template v-else>
+                        <option v-for="allowedValue in parameter.allowedValues" :value="allowedValue" :key="allowedValue">{{allowedValue}}</option>
+                      </template>
                     </select>
                   </div>
 
@@ -378,6 +383,7 @@ export default {
       this.$http.get('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/nodetypes').then(function (response) {
         this.availableNodes = JSON.parse(response.data)
       }, function (error) {
+        console.log(error)
       })
     },
     cloneJson: function (jsonObject) {
@@ -459,6 +465,19 @@ export default {
   computed: {
     validGraph: function () {
       return this.isNotBlank(this.graph.graphName) && this.isNotBlank(this.graph.projectName)
+    },
+    restMethods: function () {
+      for (var nodeKey in this.availableNodes) {
+        var node = this.availableNodes[nodeKey]
+        if (node.nodeClass === 'com.github.piedpiper.node.rest.RESTServiceNode') {
+          for (var parameterKey in node.parameterMetadataList) {
+            var parameter = node.parameterMetadataList[parameterKey]
+            if (parameter.parameterName === 'method') {
+              return parameter.allowedValues
+            }
+          }
+        }
+      }
     }
   }
 }
