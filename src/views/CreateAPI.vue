@@ -85,15 +85,9 @@
                   Please provide a name which does not exist
                 </div>
               </div>
-              <!--<div class="node-spec-container">-->
-              <!--<span class="node-spec"> <a href="#">Interim</a> </span>-->
-              <!--<span class="node-spec"> | </span>-->
-              <!--<span class="node-spec"> <a href="#">Enabled</a></span>-->
-              <!--<span class="node-spec"> | </span>-->
-              <!--<span class="node-spec"> <a href="#">Do not use cached data</a></span>-->
-              <!--<span class="node-spec"> | </span>-->
-              <!--<span class="node-spec"> <a href="#">Fan out</a></span>-->
-              <!--</div>-->
+              <div class="node-spec-container">
+                <span class="node-spec"> <input type="checkbox" id="checkbox" :checked=isIncludeOutput(node) @click="isIncludeOutputEvent($event, node)"> IncludeInOutput </span>
+              </div>
               <div class="add-parameter-attr-container">
                 <div class="add-parameter-attr btn btn-primary" @click="addParam(node)"> Add Parameter </div>
               </div>
@@ -338,6 +332,15 @@ export default {
     },
     isParamError: function (parameterName) {
       return this.duplicateParamNameError === this.getParamSelectionValue(this.nodeSelected, parameterName)
+    },
+    isIncludeOutput: function(node) {
+      if(node === undefined || node.nodeSpecification === undefined || node.nodeSpecification.includeOutput === undefined) return false;
+      return node.nodeSpecification.includeOutput;
+    },
+    isIncludeOutputEvent: function(e, node) {
+      var checked = e.target.checked;
+      if(node.nodeSpecification === undefined) this.$set(node, 'nodeSpecification', {});
+      this.$set(node.nodeSpecification, 'includeOutput', checked);
     },
     getViewType: function (parameter) {
       if (parameter.parameterType === 'VALUE_SPECIFIED_AT_RUNTIME') {
