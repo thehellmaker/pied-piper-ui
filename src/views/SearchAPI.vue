@@ -48,6 +48,9 @@
 </template>
 
 <script>
+//  var hostnamePrefix = 'https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod'
+//  var hostnamePrefix = 'http://54.156.156.159'
+var hostnamePrefix = 'https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/gamma'
 export default {
   name: 'PiedPiper',
   data () {
@@ -66,7 +69,7 @@ export default {
         graphName: this.graphName,
         searchTerm: this.searchTerm
       }
-      this.$http.post('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/graph/search', searchGraphInput).then(function (successEvent) {
+      this.$http.post(hostnamePrefix + '/graph/search', searchGraphInput).then(function (successEvent) {
         var output = successEvent.data
         var parsedGraphs = []
         if (output.length === 0) this.$set(this, 'graphList', parsedGraphs)

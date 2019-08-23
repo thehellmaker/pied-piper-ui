@@ -183,6 +183,9 @@
 
 <script>
 import editable from './Editable.vue'
+//  var hostnamePrefix = 'https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod'
+//  var hostnamePrefix = 'http://54.156.156.159'
+var hostnamePrefix = 'https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/gamma'
 export default {
   name: 'PiedPiper',
   components: {
@@ -333,14 +336,14 @@ export default {
     isParamError: function (parameterName) {
       return this.duplicateParamNameError === this.getParamSelectionValue(this.nodeSelected, parameterName)
     },
-    isIncludeOutput: function(node) {
-      if(node === undefined || node.nodeSpecification === undefined || node.nodeSpecification.includeOutput === undefined) return false;
-      return node.nodeSpecification.includeOutput;
+    isIncludeOutput: function (node) {
+      if (node === undefined || node.nodeSpecification === undefined || node.nodeSpecification.includeOutput === undefined) return false
+      return node.nodeSpecification.includeOutput
     },
-    isIncludeOutputEvent: function(e, node) {
-      var checked = e.target.checked;
-      if(node.nodeSpecification === undefined) this.$set(node, 'nodeSpecification', {});
-      this.$set(node.nodeSpecification, 'includeOutput', checked);
+    isIncludeOutputEvent: function (e, node) {
+      var checked = e.target.checked
+      if (node.nodeSpecification === undefined) this.$set(node, 'nodeSpecification', {})
+      this.$set(node.nodeSpecification, 'includeOutput', checked)
     },
     getViewType: function (parameter) {
       if (parameter.parameterType === 'VALUE_SPECIFIED_AT_RUNTIME') {
@@ -383,10 +386,12 @@ export default {
       this.$delete(parameter.attributeMap, attributeName)
     },
     getNodeTypes: function () {
-      this.$http.get('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/nodetypes').then(function (response) {
-        this.availableNodes = JSON.parse(response.data)
+      console.log('Get node types calling')
+      this.$http.get(hostnamePrefix + '/nodetypes').then(function (response) {
+        console.log('Get Node Types = '+response)
+        this.availableNodes = response.data
       }, function (error) {
-        console.log(error)
+        console.log('Error = '+error)
       })
     },
     cloneJson: function (jsonObject) {
@@ -398,7 +403,7 @@ export default {
         graph: this.graph,
         input: this.inputValues
       }
-      this.$http.post('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/graph/run', executeGraphInput).then(function (successEvent) {
+      this.$http.post(hostnamePrefix + '/graph/run', executeGraphInput).then(function (successEvent) {
         this.outputValue = JSON.parse(JSON.stringify(successEvent.body))
         this.runInProgress = false
       }, function (errorEvent) {
@@ -433,7 +438,7 @@ export default {
         tableName: 'AlmightyTable'
       }
       this.saveGraphSuccess = false
-      this.$http.put('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/graph', saveGraphInput).then(function (successEvent) {
+      this.$http.put(hostnamePrefix + '/graph', saveGraphInput).then(function (successEvent) {
         this.saveGraphError = false
         this.saveGraphSuccess = true
         this.saveInProgress = false
@@ -450,7 +455,7 @@ export default {
           projectName: this.$route.query.projectName,
           graphName: this.$route.query.graphName
         }
-        this.$http.post('https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod/graph/search', searchGraphInput).then(function (successEvent) {
+        this.$http.post(hostnamePrefix + '/graph/search', searchGraphInput).then(function (successEvent) {
           var output = successEvent.body
           if (output.length === 0) return
           var graph = output[0].graph
