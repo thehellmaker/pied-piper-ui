@@ -50,7 +50,8 @@
 <script>
 //  var hostnamePrefix = 'https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod'
 //  var hostnamePrefix = 'http://54.156.156.159'
-var hostnamePrefix = 'https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/gamma'
+// var hostnamePrefix = 'https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/gamma'
+var hostnamePrefix = 'http://localhost:9000'
 export default {
   name: 'PiedPiper',
   data () {

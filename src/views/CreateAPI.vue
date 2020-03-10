@@ -151,7 +151,7 @@
                       </option>
                     </select>
                     <div class="constant-field-container">
-                      <editor  v-model="parameter.parameterValue" @init="editorInit" theme="chrome" width="100%" height="100"></editor>
+                      <editor  v-model="parameter.parameterValue" @init="editorInit" theme="chrome" width="100%" height="700"></editor>
                     </div>
                     <br/>
                   </div>
@@ -185,7 +185,8 @@
 import editable from './Editable.vue'
 //  var hostnamePrefix = 'https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/prod'
 //  var hostnamePrefix = 'http://54.156.156.159'
-var hostnamePrefix = 'https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/gamma'
+var hostnamePrefix = 'http://localhost:9000'
+// var hostnamePrefix = 'https://ms9uc1ppsa.execute-api.us-east-1.amazonaws.com/gamma'
 export default {
   name: 'PiedPiper',
   components: {
