@@ -1,1 +1,1 @@
-module.exports='https://mn4eixcpn3.execute-api.us-east-1.amazonaws.com/DEV'
+module.exports='YOUR HOST NAME HERE'
