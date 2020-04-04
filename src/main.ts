@@ -8,7 +8,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Resource from 'vue-resource'
 import TreeView from 'vue-json-tree-view'
 import './registerServiceWorker'
-import 'authenticationPlugin/firebaseInit'
+import 'authenticationPlugin/Init'
 import * as myAuthenticationPlugin from 'authenticationPlugin/App'
 require('./assets/css/piedpiper.css')
 Vue.config.productionTip = false
@@ -20,7 +20,7 @@ Vue.use(TreeView)
 let app: import('vue/types/vue').CombinedVueInstance<Vue, object, object, object, Record<never, any>> | undefined
 myAuthenticationPlugin.onAuthStateChanged(() => {
   if (!app) {
-    app=new Vue({
+    app = new Vue({
       router,
       store,
       components: { App },

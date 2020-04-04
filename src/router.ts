@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import SearchAPI from './views/SearchAPI.vue'
 import CreateAPI from './views/CreateAPI.vue'
-import Login from './views/auth/LogIn.vue'
-import Signup from './views/auth/SignUp.vue'
-import forgotPassword from './views/auth/ForgotPassword.vue'
+import Login from './views/authentication/LogIn.vue'
+import Signup from './views/authentication/SignUp.vue'
+import forgotPassword from './views/authentication/ForgotPassword.vue'
 import * as myAuthenticationPlugin from 'authenticationPlugin/App'
 Vue.use(Router)
 let router = new Router({
@@ -57,35 +57,48 @@ let router = new Router({
 router.beforeEach((to, from, next) => {
   // check for required auth guard
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    // check if NOT logged in
-    if (!myAuthenticationPlugin.getLoggedInUser()) {
-      // Go to login
-      next({
-        path: '/login',
-        query: {
-          redirect: to.fullPath
-        }
-      })
-    } else if (myAuthenticationPlugin.getLoggedInUser().isEmailVerified === true) {
-      // Proceed to route
-      next()
-    }
+    requiresAuthLogic(to, next)
   } else if (to.matched.some(record => record.meta.requiresGuest)) {
-    // check if logged in
-    if (myAuthenticationPlugin.getLoggedInUser() && myAuthenticationPlugin.getLoggedInUser().isEmailVerified === true) {
-      next({
-        path: '/',
-        query: {
-          redirect: to.fullPath
-        }
-      })
-    } else {
-      // Proceed to route
-      next()
-    }
+    requiresGuestLogic(to, next)
   } else {
     // Proceed to route
     next()
   }
 })
+function requiresAuthLogic(to, next) {
+  // check if NOT logged in
+  if (!isUserLoggedIn()) {
+    // Go to login
+    next({
+      path: '/login',
+      query: {
+        redirect: to.fullPath
+      }
+    })
+  } else if (isUserEmailVerified() === true) {
+    // Proceed to route
+    next()
+  }
+}
+
+function requiresGuestLogic(to, next) {
+  if (isUserLoggedIn() && isUserEmailVerified() === true) {
+    next({
+      path: '/',
+      query: {
+        redirect: to.fullPath
+      }
+    })
+  } else {
+    // Proceed to route
+    next()
+  }
+}
+
+function isUserLoggedIn() {
+  return myAuthenticationPlugin.getLoggedInUser()
+}
+function isUserEmailVerified() {
+  return myAuthenticationPlugin.getLoggedInUser().isEmailVerified
+}
 export default router
