@@ -8,6 +8,10 @@
       <a v-if='isLoggedIn' class="no-link" href="/"><div class="nav-button btn btn-outline-secondary"> SEARCH APIs</div></a>
     </div>
     <router-view/>
+    <div class="alert alert-danger alert-nodename" v-if="error">
+        <strong>Error :</strong>
+        {{this.error}}
+      </div>
   </div>
 </template>
 
@@ -17,13 +21,18 @@ export default {
   name: 'App',
   data () {
     return {
-      isLoggedIn: myAuthenticationPlugin.isAuthenticated()
+      isLoggedIn: myAuthenticationPlugin.isAuthenticated(),
+      error: ''
     }
   },
   methods: {
     logout: async function () {
-      await myAuthenticationPlugin.logout()
-      this.$router.go({ path: this.$router.path })
+      try {
+        await myAuthenticationPlugin.logout()
+        this.$router.go({ path: this.$router.path })
+      } catch (err) {
+        this.error=err.message
+      }
     }
   }
 }
