@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import firebase from 'firebase'
 import * as myAuthenticationPlugin from 'authenticationPlugin/App'
 export default {
   name: 'forgotPassword',
