@@ -5,7 +5,7 @@
       <!-- Tabs Titles -->
       <h2 class="active">Sign In</h2>
       <h2 class="inactive underlineHover">
-        <a href="/signup">Sign Up</a>
+        <a href="/login">Sign Up</a> <!-- Replace /login with /signup when you enable the route from router.ts to signup -->
       </h2>
       <!-- Icon -->
       <div class="fadeIn first">

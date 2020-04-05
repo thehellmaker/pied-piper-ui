@@ -184,7 +184,7 @@
 <script>
 import editable from './Editable.vue'
 const host=require('../../config.js')
-var hostnamePrefix = host
+var hostnamePrefix = host.hostname
 export default {
   name: 'PiedPiper',
   components: {

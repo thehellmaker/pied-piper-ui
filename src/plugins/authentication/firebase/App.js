@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-
+import './Init'
 export function getLoggedInUser () {
   const currentUser = firebase.auth().currentUser
   if (currentUser) {
@@ -14,7 +14,7 @@ export function getLoggedInUser () {
 }
 
 export function isAuthenticated () {
-  return (this.getLoggedInUser() && this.getLoggedInUser().isEmailVerified === true) ? true : false
+  return !!((this.getLoggedInUser() && this.getLoggedInUser().isEmailVerified === true))
 }
 
 export async function authenticate (email, password) {

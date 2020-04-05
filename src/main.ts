@@ -8,7 +8,6 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Resource from 'vue-resource'
 import TreeView from 'vue-json-tree-view'
 import './registerServiceWorker'
-import 'authenticationPlugin/Init'
 import * as myAuthenticationPlugin from 'authenticationPlugin/App'
 require('./assets/css/piedpiper.css')
 Vue.config.productionTip = false

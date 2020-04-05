@@ -49,7 +49,7 @@
 
 <script>
 const host=require('../../config.js')
-var hostnamePrefix = host
+var hostnamePrefix = host.hostname
 export default {
   name: 'PiedPiper',
   data () {

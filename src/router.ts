@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import Router, { Route } from 'vue-router'
 import SearchAPI from './views/SearchAPI.vue'
 import CreateAPI from './views/CreateAPI.vue'
 import Login from './views/authentication/LogIn.vue'
@@ -19,14 +19,14 @@ let router = new Router({
         requiresGuest: true
       }
     },
-    {
-      path: '/signup',
-      name: 'signup',
-      component: Signup,
-      meta: {
-        requiresGuest: true
-      }
-    },
+    // {
+    //   path: '/signup',
+    //   name: 'signup',
+    //   component: Signup,
+    //   meta: {
+    //     requiresGuest: true
+    //   }
+    // },
     {
       path: '/forgotpassword',
       name: 'forgotpassword',
@@ -65,7 +65,7 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-function requiresAuthLogic(to, next) {
+function requiresAuthLogic (to:Route, next:Function) {
   // check if NOT logged in
   if (!isUserLoggedIn()) {
     // Go to login
@@ -81,7 +81,7 @@ function requiresAuthLogic(to, next) {
   }
 }
 
-function requiresGuestLogic(to, next) {
+function requiresGuestLogic (to:Route, next:Function) {
   if (isUserLoggedIn() && isUserEmailVerified() === true) {
     next({
       path: '/',
@@ -95,10 +95,10 @@ function requiresGuestLogic(to, next) {
   }
 }
 
-function isUserLoggedIn() {
+function isUserLoggedIn () {
   return myAuthenticationPlugin.getLoggedInUser()
 }
-function isUserEmailVerified() {
+function isUserEmailVerified () {
   return myAuthenticationPlugin.getLoggedInUser().isEmailVerified
 }
 export default router
