@@ -6,9 +6,9 @@
       <h2 class="inactive underlineHover">
         <a href="/login">Sign In</a>
       </h2>
-      <h2 class="inactive underlineHover">
+      <!--h2 class="inactive underlineHover">
         <a href="/signup">Sign Up</a>
-      </h2>
+      </h2-->
 
       <!-- Icon -->
       <div class="fadeIn first">
