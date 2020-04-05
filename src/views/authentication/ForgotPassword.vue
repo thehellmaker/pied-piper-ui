@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import firebase from 'firebase'
 import * as myAuthenticationPlugin from 'authenticationPlugin/App'
 export default {
   name: 'forgotPassword',
@@ -59,7 +58,7 @@ export default {
     forgotPassword: async function (e) {
       try {
         e.preventDefault()
-        this.successMessage = await myAuthenticationPlugin.forgotPassword(
+        this.successMessage = await myAuthenticationPlugin.default.forgotPassword(
           this.email
         )
       } catch (err) {

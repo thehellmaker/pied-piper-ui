@@ -54,7 +54,6 @@
 </template>
 
 <script>
-import firebase from 'firebase'
 import * as myAuthenticationPlugin from 'authenticationPlugin/App'
 export default {
   name: 'login',
@@ -70,8 +69,8 @@ export default {
     login: async function (e) {
       try {
         e.preventDefault()
-        await myAuthenticationPlugin.authenticate(this.email, this.password)
-        this.isEmailVerified = myAuthenticationPlugin.getLoggedInUser().isEmailVerified
+        await myAuthenticationPlugin.default.authenticate(this.email, this.password)
+        this.isEmailVerified = myAuthenticationPlugin.default.getLoggedInUser().isEmailVerified
         if (this.isEmailVerified) {
           this.$router.go({ path: this.$router.path })
         }

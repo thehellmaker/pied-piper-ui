@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import firebase from 'firebase'
 import * as myAuthenticationPlugin from 'authenticationPlugin/App'
 export default {
   name: 'login',
@@ -71,7 +70,7 @@ export default {
     signup: async function (e) {
       try {
         e.preventDefault()
-        this.successMessage = await myAuthenticationPlugin.signup(
+        this.successMessage = await myAuthenticationPlugin.default.signup(
           this.email,
           this.password
         )
