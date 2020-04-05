@@ -59,7 +59,7 @@ export default {
     forgotPassword: async function (e) {
       try {
         e.preventDefault()
-        this.successMessage = await myAuthenticationPlugin.forgotPassword(
+        this.successMessage = await myAuthenticationPlugin.default.forgotPassword(
           this.email
         )
       } catch (err) {

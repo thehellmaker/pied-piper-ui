@@ -21,17 +21,17 @@ export default {
   name: 'App',
   data () {
     return {
-      isLoggedIn: myAuthenticationPlugin.isAuthenticated(),
+      isLoggedIn: myAuthenticationPlugin.default.isAuthenticated(),
       error: ''
     }
   },
   methods: {
     logout: async function () {
       try {
-        await myAuthenticationPlugin.logout()
+        await myAuthenticationPlugin.default.logout()
         this.$router.go({ path: this.$router.path })
       } catch (err) {
-        this.error=err.message
+        this.error = err.message
       }
     }
   }

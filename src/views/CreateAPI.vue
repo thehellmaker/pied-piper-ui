@@ -183,7 +183,7 @@
 
 <script>
 import editable from './Editable.vue'
-const host=require('../../config.js')
+const host = require('../../config.js')
 var hostnamePrefix = host.hostname
 export default {
   name: 'PiedPiper',
@@ -387,10 +387,10 @@ export default {
     getNodeTypes: function () {
       console.log('Get node types calling')
       this.$http.get(hostnamePrefix + '/nodetypes').then(function (response) {
-        console.log('Get Node Types = '+response)
+        console.log('Get Node Types = ', response)
         this.availableNodes = response.data
       }, function (error) {
-        console.log('Error = '+error)
+        console.log('Error = ', error)
       })
     },
     cloneJson: function (jsonObject) {
@@ -419,7 +419,9 @@ export default {
           if (nodeValue.parameterMap !== undefined) {
             Object.keys(nodeValue.parameterMap).forEach(function (paramName) {
               var paramValue = nodeValue.parameterMap[paramName]
-              if (paramValue.parameterValue.startsWith('${input.')) explicitValues[paramValue.parameterValue.substring(8, paramValue.parameterValue.length-1)] = ''
+              if (paramValue.parameterValue.startsWith('${input.')) {
+                explicitValues[paramValue.parameterValue.substring(8, paramValue.parameterValue.length - 1)] = ''
+              }
             })
           }
         })
@@ -485,6 +487,7 @@ export default {
           }
         }
       }
+      return []
     }
   }
 }

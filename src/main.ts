@@ -17,7 +17,7 @@ Vue.use(Resource)
 Vue.use(TreeView)
 
 let app: import('vue/types/vue').CombinedVueInstance<Vue, object, object, object, Record<never, any>> | undefined
-myAuthenticationPlugin.onAuthStateChanged(() => {
+myAuthenticationPlugin.default.onAuthStateChanged(() => {
   if (!app) {
     app = new Vue({
       router,
