@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import * as myAuthenticationPlugin from 'authenticationPlugin/App'
+import myAuthenticationPlugin from 'authenticationPlugin/App'
 export default {
   name: 'login',
   data: function () {
@@ -69,9 +69,10 @@ export default {
     login: async function (e) {
       try {
         e.preventDefault()
-        await myAuthenticationPlugin.default.authenticate(this.email, this.password)
-        this.isEmailVerified = myAuthenticationPlugin.default.getLoggedInUser().isEmailVerified
+        await myAuthenticationPlugin.authenticate(this.email, this.password)
+        this.isEmailVerified = myAuthenticationPlugin.getLoggedInUser().isEmailVerified
         if (this.isEmailVerified) {
+          this.$router.push({ path: this.$route.query.redirect })
           this.$router.go({ path: this.$router.path })
         }
       } catch (err) {
