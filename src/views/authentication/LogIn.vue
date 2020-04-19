@@ -4,9 +4,9 @@
     <div id="formContent">
       <!-- Tabs Titles -->
       <h2 class="active">Sign In</h2>
-      <!--h2 class="inactive underlineHover">
+      <h2 class="inactive underlineHover">
         <a href="/signup">Sign Up</a>
-      </h2 -->
+      </h2>
       <!-- Icon -->
       <div class="fadeIn first">
         <img src="../../assets/logo-notext.jpg" id="icon" alt="User Icon" />
@@ -54,8 +54,7 @@
 </template>
 
 <script>
-import firebase from 'firebase'
-import * as myAuthenticationPlugin from 'authenticationPlugin/App'
+import myAuthenticationPlugin from 'authenticationPlugin/App'
 export default {
   name: 'login',
   data: function () {
@@ -73,6 +72,7 @@ export default {
         await myAuthenticationPlugin.authenticate(this.email, this.password)
         this.isEmailVerified = myAuthenticationPlugin.getLoggedInUser().isEmailVerified
         if (this.isEmailVerified) {
+          this.$router.push({ path: this.$route.query.redirect })
           this.$router.go({ path: this.$router.path })
         }
       } catch (err) {

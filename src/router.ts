@@ -96,9 +96,9 @@ function requiresGuestLogic (to:Route, next:Function) {
 }
 
 function isUserLoggedIn () {
-  return myAuthenticationPlugin.getLoggedInUser()
+  return myAuthenticationPlugin.default.getLoggedInUser()
 }
 function isUserEmailVerified () {
-  return myAuthenticationPlugin.getLoggedInUser().isEmailVerified
+  return myAuthenticationPlugin.default.getLoggedInUser().isEmailVerified
 }
 export default router

@@ -55,8 +55,7 @@
 </template>
 
 <script>
-import firebase from 'firebase'
-import * as myAuthenticationPlugin from 'authenticationPlugin/App'
+import myAuthenticationPlugin from 'authenticationPlugin/App'
 export default {
   name: 'login',
   data: function () {

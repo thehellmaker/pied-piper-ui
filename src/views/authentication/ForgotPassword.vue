@@ -6,16 +6,16 @@
       <h2 class="inactive underlineHover">
         <a href="/login">Sign In</a>
       </h2>
-      <!--h2 class="inactive underlineHover">
+      <h2 class="inactive underlineHover">
         <a href="/signup">Sign Up</a>
-      </h2-->
+      </h2>
 
       <!-- Icon -->
       <div class="fadeIn first">
         <img src="../../assets/logo-notext.jpg" id="icon" alt="User Icon" />
       </div>
 
-      <!-- Login Form -->
+      <!-- ForgotPassword Form -->
       <form>
         <input
           type="text"
@@ -44,8 +44,7 @@
 </template>
 
 <script>
-import firebase from 'firebase'
-import * as myAuthenticationPlugin from 'authenticationPlugin/App'
+import myAuthenticationPlugin from 'authenticationPlugin/App'
 export default {
   name: 'forgotPassword',
   data: function () {

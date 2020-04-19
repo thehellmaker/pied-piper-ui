@@ -48,7 +48,7 @@
 </template>
 
 <script>
-const host=require('../../config.js')
+const host = require('../../config.js')
 var hostnamePrefix = host.hostname
 export default {
   name: 'PiedPiper',
