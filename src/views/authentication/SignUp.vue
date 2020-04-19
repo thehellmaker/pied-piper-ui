@@ -55,11 +55,7 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import * as myAuthenticationPlugin from 'authenticationPlugin/App'
-=======
 import myAuthenticationPlugin from 'authenticationPlugin/App'
->>>>>>> Added unit tests for authentication components
 export default {
   name: 'login',
   data: function () {
@@ -74,7 +70,7 @@ export default {
     signup: async function (e) {
       try {
         e.preventDefault()
-        this.successMessage = await myAuthenticationPlugin.default.signup(
+        this.successMessage = await myAuthenticationPlugin.signup(
           this.email,
           this.password
         )

@@ -8,7 +8,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Resource from 'vue-resource'
 import TreeView from 'vue-json-tree-view'
 import './registerServiceWorker'
-import * as myAuthenticationPlugin from 'authenticationPlugin/App'
+import myAuthenticationPlugin from 'authenticationPlugin/App'
 require('./assets/css/piedpiper.css')
 Vue.config.productionTip = false
 
@@ -17,7 +17,7 @@ Vue.use(Resource)
 Vue.use(TreeView)
 
 let app: import('vue/types/vue').CombinedVueInstance<Vue, object, object, object, Record<never, any>> | undefined
-myAuthenticationPlugin.default.onAuthStateChanged(() => {
+myAuthenticationPlugin.onAuthStateChanged(() => {
   if (!app) {
     app = new Vue({
       router,

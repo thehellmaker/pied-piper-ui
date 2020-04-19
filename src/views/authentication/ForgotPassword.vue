@@ -44,11 +44,7 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import * as myAuthenticationPlugin from 'authenticationPlugin/App'
-=======
 import myAuthenticationPlugin from 'authenticationPlugin/App'
->>>>>>> Added unit tests for authentication components
 export default {
   name: 'forgotPassword',
   data: function () {
@@ -62,7 +58,7 @@ export default {
     forgotPassword: async function (e) {
       try {
         e.preventDefault()
-        this.successMessage = await myAuthenticationPlugin.default.forgotPassword(
+        this.successMessage = await myAuthenticationPlugin.forgotPassword(
           this.email
         )
       } catch (err) {
