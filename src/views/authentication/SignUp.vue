@@ -55,7 +55,11 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import * as myAuthenticationPlugin from 'authenticationPlugin/App'
+=======
+import myAuthenticationPlugin from 'authenticationPlugin/App'
+>>>>>>> Added unit tests for authentication components
 export default {
   name: 'login',
   data: function () {
