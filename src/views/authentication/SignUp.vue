@@ -4,9 +4,9 @@
     <div id="formContent">
       <!-- Tabs Titles -->
       <h2 class="inactive underlineHover">
-        <a href="/login">Sign In</a>
+        <a id="login" href="/login">Sign In</a>
       </h2>
-      <h2 class="active">Sign Up</h2>
+      <h2 class="active" id="signup">Sign Up</h2>
 
       <!-- Icon -->
       <div class="fadeIn first">
@@ -31,12 +31,12 @@
           placeholder="Password"
           v-model="password"
         />
-        <input v-on:click="signup" type="submit" class="fadeIn fourth" value="Sign Up" />
+        <input v-on:click="signup" type="submit" class="fadeIn fourth" value="Sign Up" id="submit" />
       </form>
 
       <!-- Remind Passowrd -->
       <div id="formFooter">
-        <a class="underlineHover" href="/forgotpassword">Forgot Password?</a>
+        <a id="forgotpassword" class="underlineHover" href="/forgotpassword">Forgot Password?</a>
       </div>
 
       <!-- Success message -->

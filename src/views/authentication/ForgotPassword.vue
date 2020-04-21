@@ -4,10 +4,10 @@
     <div id="formContent">
       <!-- Tabs Titles -->
       <h2 class="inactive underlineHover">
-        <a href="/login">Sign In</a>
+        <a id="login" href="/login">Sign In</a>
       </h2>
       <h2 class="inactive underlineHover">
-        <a href="/signup">Sign Up</a>
+        <a id= "signup" href="/signup">Sign Up</a>
       </h2>
 
       <!-- Icon -->
@@ -25,7 +25,7 @@
           placeholder="Email"
           v-model="email"
         />
-        <input v-on:click="forgotPassword" type="submit" class="fadeIn fourth" value="Submit" />
+        <input v-on:click="forgotPassword" type="submit" class="fadeIn fourth" value="Submit" id="submit" />
       </form>
 
       <!-- Success message -->

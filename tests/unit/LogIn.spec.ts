@@ -25,45 +25,44 @@ beforeEach(() => {
 })
 
 describe('LogIn.vue', () => {
-    const _1stIndexOf_a = wrapper.findAll('a').at(0)
-    const _2ndIndexOf_a= wrapper.findAll('a').at(1)
-    const _1stIndexOf_input= wrapper.findAll('input').at(0)
-    const _2ndIndexOf_input=wrapper.findAll('input').at(1)
-    const _3rdIndexOf_input=wrapper.findAll('input').at(2)
-    const _1stIndexOf_h2=wrapper.findAll('h2').at(0)
-    const _2ndIndexOf_h2=wrapper.findAll('h2').at(1)
+    const indexOfSignup = wrapper.find('#signup')
+    const indexOfForgotpassword= wrapper.find('#forgotpassword')
+    const indexOf_1stInputField= wrapper.find('#Email')
+    const indexOf_2ndInputField=wrapper.find('#password')
+    const indexOfSubmitButton=wrapper.find('#submit')
+    const indexOfLogin=wrapper.find('#login')
 
     it('Check if Sign In is present',() => {    //can be ommitted
-        expect(_1stIndexOf_h2.text()).toBe("Sign In")
+        expect(indexOfLogin.text()).toBe("Sign In")
     })
 
     it('Check if Sign Up is present',() => {    //can be ommitted
-        expect(_2ndIndexOf_h2.text()).toBe("Sign Up")
+        expect(indexOfSignup.text()).toBe("Sign Up")
     })
 
     it('Check if Sign Up has correct href',() => {
-        expect(_1stIndexOf_a.attributes().href).toBe('/signup')
+        expect(indexOfSignup.attributes().href).toBe('/signup')
     })
 
     it('Check if placeholders have correct fields', () => {     //can be ommitted
-        expect(_1stIndexOf_input.attributes('placeholder')).toBe('Email')
-        expect(_2ndIndexOf_input.attributes('placeholder')).toBe('Password')
+        expect(indexOf_1stInputField.attributes('placeholder')).toBe('Email')
+        expect(indexOf_2ndInputField.attributes('placeholder')).toBe('Password')
     })
 
     it('Check if id of Password field is password so that it is masked', () => {
-        expect(_2ndIndexOf_input.attributes('id')).toBe('password')
+        expect(indexOf_2ndInputField.attributes('id')).toBe('password')
     })
 
     it('Check if forgot password exists and if it contains correct href', () => {
-        expect(_2ndIndexOf_a.text()).toBe('Forgot Password?')
-        expect(_2ndIndexOf_a.attributes().href).toBe('/forgotpassword')
+        expect(indexOfForgotpassword.text()).toBe('Forgot Password?')
+        expect(indexOfForgotpassword.attributes().href).toBe('/forgotpassword')
     })
 
     it('Check if v-model binding is correct for the input the LogIn form takes', () => {
         expect(wrapper.vm.$data.email).toBe("")
         expect(wrapper.vm.$data.password).toBe("")
-        _1stIndexOf_input.setValue("testEmail")
-        _2ndIndexOf_input.setValue("my password")
+        indexOf_1stInputField.setValue("testEmail")
+        indexOf_2ndInputField.setValue("my password")
         expect(wrapper.vm.$data.email).toBe("testEmail")
         expect(wrapper.vm.$data.password).toBe("my password")
     })
@@ -81,7 +80,7 @@ describe('LogIn.vue', () => {
                   }
             });
 
-        const button = _3rdIndexOf_input
+        const button = indexOfSubmitButton
         button.trigger('click')
 
         await wrapper.vm.$nextTick()
@@ -106,12 +105,11 @@ describe('LogIn.vue', () => {
             authApp.getLoggedInUser = jest.fn((email: string, password: string) => {
             });
 
-        const button = _3rdIndexOf_input
+        const button = indexOfSubmitButton
         button.trigger('click')
 
         await wrapper.vm.$nextTick()
         expect(wrapper.vm.$data.error).toBe(err.err.message)
-        expect(wrapper.vm.$data.successMessage).toBe("")
         expect(wrapper.vm.$data.email).toBe("")
         expect(wrapper.vm.$data.password).toBe("")
         expect(wrapper.vm.$data.isEmailVerified).toBe("")
@@ -130,12 +128,11 @@ describe('LogIn.vue', () => {
                 throw new Error(<any>err.err.message)
             });
 
-        const button = _3rdIndexOf_input
+        const button = indexOfSubmitButton
         button.trigger('click')
 
         await wrapper.vm.$nextTick()
         expect(wrapper.vm.$data.error).toBe(err.err.message)
-        expect(wrapper.vm.$data.successMessage).toBe("")
         expect(wrapper.vm.$data.email).toBe("")
         expect(wrapper.vm.$data.password).toBe("")
         expect(wrapper.vm.$data.isEmailVerified).toBe("")

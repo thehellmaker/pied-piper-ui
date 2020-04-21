@@ -8,32 +8,32 @@ beforeEach(() => {
     wrapper.vm.$data.email = ""
 })
 describe('ForgotPassword.vue', () => {
-    const _1stIndexOf_a = wrapper.findAll('a').at(0)
-    const _2ndIndexOf_a= wrapper.findAll('a').at(1)
-    const _1stIndexOf_input= wrapper.findAll('input').at(0)
-    const _2ndIndexOf_input=wrapper.findAll('input').at(1)
+    const indexOfLogin = wrapper.find('#login')
+    const indexOfSignup= wrapper.find('#signup')
+    const indexOf_1stInputField= wrapper.find('#Email')
+    const indexOfSubmitButton=wrapper.find('#submit')
     it('Check if Sign In is present',() => {                //can be ommitted
-        expect(_1stIndexOf_a.text()).toBe("Sign In")
+        expect(indexOfLogin.text()).toBe("Sign In")
     })
 
     it('Check if Sign In has correct href',() => {
-        expect(_1stIndexOf_a.attributes().href).toBe('/login')
+        expect(indexOfLogin.attributes().href).toBe('/login')
     })
 
     it('Check if Sign Up is present',() => {                //can be ommitted
-        expect(_2ndIndexOf_a.text()).toBe("Sign Up")
+        expect(indexOfSignup.text()).toBe("Sign Up")
     })
 
     it('Check if Sign Up has correct href', () => {
-        expect(_2ndIndexOf_a.attributes('href')).toBe('/signup')
+        expect(indexOfSignup.attributes('href')).toBe('/signup')
     })
 
     it('Check if placeholder has correct name', () => {     //can be ommitted
-        expect(_1stIndexOf_input.attributes('placeholder')).toBe('Email')
+        expect(indexOf_1stInputField.attributes('placeholder')).toBe('Email')
     })
     it('Check if v-model binding is correct for the input the forgot password forum takes', () => {
         expect(wrapper.vm.$data.email).toBe("")
-        _1stIndexOf_input.setValue("testEmail")
+        indexOf_1stInputField.setValue("testEmail")
         expect(wrapper.vm.$data.email).toBe("testEmail")
     })
 
@@ -45,7 +45,7 @@ describe('ForgotPassword.vue', () => {
                 return msg
             });
 
-        const button = _2ndIndexOf_input
+        const button = indexOfSubmitButton
         button.trigger('click')
 
         await wrapper.vm.$nextTick()
@@ -57,7 +57,7 @@ describe('ForgotPassword.vue', () => {
         authApp.forgotPassword = jest.fn((email: string) => {
             throw new Error(<any>err.err.message)
         });
-        const button = _2ndIndexOf_input
+        const button = indexOfSubmitButton
         button.trigger('click')
         await wrapper.vm.$nextTick()
         expect(wrapper.vm.$data.error).toBe(err.err.message)
