@@ -22,8 +22,8 @@ const App = {
     await firebase.auth().signInWithEmailAndPassword(email, password)
   },
   signup: async (email, password) => {
-    const user = await firebase.auth().createUserWithEmailAndPassword(email, password)
-    await user.user.sendEmailVerification()
+    const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password)
+    await userCredential.user.sendEmailVerification()
     return `Check your email for verification mail before logging in`
   },
   forgotPassword: async (email) => {
