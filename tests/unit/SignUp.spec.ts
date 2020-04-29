@@ -11,29 +11,23 @@ beforeEach(() => {
 
 describe('SignUp.vue', () => {
     const indexOfLogin = wrapper.find('#login')
-    const indexOfForgotpassword= wrapper.find('#forgotpassword')
-    const indexOf_1stInputField= wrapper.find('#Email')
-    const indexOf_2ndInputField=wrapper.find('#password')
-    const indexOfSubmitButton=wrapper.find('#submit')
-    const indexOfSignup=wrapper.find('#signup')
-    it('Check if Sign In is present',() => {            //can be ommitted
+    const indexOfForgotpassword = wrapper.find('#forgotpassword')
+    const indexOf_1stInputField = wrapper.find('#Email')
+    const indexOf_2ndInputField = wrapper.find('#password')
+    const indexOfSubmitButton = wrapper.find('#submit')
+    const indexOfSignup = wrapper.find('#signup')
+    it('Check if Sign In is present and has correct href', () => {
         expect(indexOfLogin.text()).toBe("Sign In")
-    })
-
-    it('Check if Sign In has correct href',() => {
         expect(indexOfLogin.attributes().href).toBe('/login')
     })
 
-    it('Check if Sign Up is present',() => {            //can be ommitted
+    it('Check if Sign Up is present', () => {
         expect(indexOfSignup.text()).toBe("Sign Up")
     })
 
-    it('Check if placeholders have correct fields', () => {         //can be ommitted
+    it('Check if placeholders have correct fields and if password is masked', () => {
         expect(indexOf_1stInputField.attributes('placeholder')).toBe('Email')
         expect(indexOf_2ndInputField.attributes('placeholder')).toBe('Password')
-    })
-
-    it('Check if id of Password field is password so that it is masked', () => {
         expect(indexOf_2ndInputField.attributes('id')).toBe('password')
     })
 
@@ -52,11 +46,11 @@ describe('SignUp.vue', () => {
     })
 
     it('Check if email and password is correctly set and if on submitting the forum, A success response is returned', async () => {
-        const signup= authApp.signup
-            authApp.signup = jest.fn((email: string, password: string) => {
-                const msg='success'
-                return msg
-            });
+        const signup = authApp.signup
+        authApp.signup = jest.fn((email: string, password: string) => {
+            const msg = 'success'
+            return msg
+        });
 
         const button = indexOfSubmitButton
         button.trigger('click')
@@ -67,7 +61,7 @@ describe('SignUp.vue', () => {
     })
 
     it('Check if data returns an error message if the signup method throws an error', async () => {
-        const err= {"err":{"message":"Network Error"}}
+        const err = { "err": { "message": "Network Error" } }
         authApp.signup = jest.fn((email: string) => {
             throw new Error(<any>err.err.message)
         });

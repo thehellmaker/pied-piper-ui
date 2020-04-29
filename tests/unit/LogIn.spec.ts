@@ -1,17 +1,17 @@
 import { shallowMount } from '@vue/test-utils'
 import LogIn from '@/views/authentication/LogIn.vue'
 import authApp from 'authenticationPlugin/App'
-const err= {"err":{"message":"Network Error"}}
+const err = { "err": { "message": "Network Error" } }
 const $router = {
     push: jest.fn(),
     go: jest.fn(),
     path: jest.fn()
-  };
+};
 
 const $route = {
-    query: {redirect:jest.fn()}
+    query: { redirect: jest.fn() }
 }
-const wrapper = shallowMount(LogIn,{
+const wrapper = shallowMount(LogIn, {
     mocks: {
         $router,
         $route
@@ -26,33 +26,25 @@ beforeEach(() => {
 
 describe('LogIn.vue', () => {
     const indexOfSignup = wrapper.find('#signup')
-    const indexOfForgotpassword= wrapper.find('#forgotpassword')
-    const indexOf_1stInputField= wrapper.find('#Email')
-    const indexOf_2ndInputField=wrapper.find('#password')
-    const indexOfSubmitButton=wrapper.find('#submit')
-    const indexOfLogin=wrapper.find('#login')
+    const indexOfForgotpassword = wrapper.find('#forgotpassword')
+    const indexOf_1stInputField = wrapper.find('#Email')
+    const indexOf_2ndInputField = wrapper.find('#password')
+    const indexOfSubmitButton = wrapper.find('#submit')
+    const indexOfLogin = wrapper.find('#login')
 
-    it('Check if Sign In is present',() => {    //can be ommitted
+    it('Check if Sign In is present', () => {
         expect(indexOfLogin.text()).toBe("Sign In")
     })
 
-    it('Check if Sign Up is present',() => {    //can be ommitted
+    it('Check if Sign Up is present and has correct href', () => {
         expect(indexOfSignup.text()).toBe("Sign Up")
-    })
-
-    it('Check if Sign Up has correct href',() => {
         expect(indexOfSignup.attributes().href).toBe('/signup')
     })
-
-    it('Check if placeholders have correct fields', () => {     //can be ommitted
+    it('Check if placeholders have correct fields and if password is masked', () => {
         expect(indexOf_1stInputField.attributes('placeholder')).toBe('Email')
         expect(indexOf_2ndInputField.attributes('placeholder')).toBe('Password')
-    })
-
-    it('Check if id of Password field is password so that it is masked', () => {
         expect(indexOf_2ndInputField.attributes('id')).toBe('password')
     })
-
     it('Check if forgot password exists and if it contains correct href', () => {
         expect(indexOfForgotpassword.text()).toBe('Forgot Password?')
         expect(indexOfForgotpassword.attributes().href).toBe('/forgotpassword')
@@ -68,17 +60,17 @@ describe('LogIn.vue', () => {
     })
 
     it('Check if user is authenticated and Email is verified then user should be redirected to the correct path', async () => {
-        const authenticate= authApp.authenticate
-        const getLoggedInUser= authApp.getLoggedInUser
+        const authenticate = authApp.authenticate
+        const getLoggedInUser = authApp.getLoggedInUser
 
-            authApp.authenticate = jest.fn((email: string, password: string) => {
-            });
+        authApp.authenticate = jest.fn((email: string, password: string) => {
+        });
 
-            authApp.getLoggedInUser = jest.fn((email: string, password: string) => {
-                return {
-                    isEmailVerified: true
-                  }
-            });
+        authApp.getLoggedInUser = jest.fn((email: string, password: string) => {
+            return {
+                isEmailVerified: true
+            }
+        });
 
         const button = indexOfSubmitButton
         button.trigger('click')
@@ -95,15 +87,15 @@ describe('LogIn.vue', () => {
 
 
     it('Check if authenticate throws an error then data returns an error message', async () => {
-        const authenticate= authApp.authenticate
-        const getLoggedInUser= authApp.getLoggedInUser
+        const authenticate = authApp.authenticate
+        const getLoggedInUser = authApp.getLoggedInUser
 
-            authApp.authenticate = jest.fn((email: string, password: string) => {
-                throw new Error(<any>err.err.message)
-            });
+        authApp.authenticate = jest.fn((email: string, password: string) => {
+            throw new Error(<any>err.err.message)
+        });
 
-            authApp.getLoggedInUser = jest.fn((email: string, password: string) => {
-            });
+        authApp.getLoggedInUser = jest.fn((email: string, password: string) => {
+        });
 
         const button = indexOfSubmitButton
         button.trigger('click')
@@ -118,15 +110,15 @@ describe('LogIn.vue', () => {
     })
 
     it('Check if getLoggedInUser throws an error then data returns an error message', async () => {
-        const authenticate= authApp.authenticate
-        const getLoggedInUser= authApp.getLoggedInUser
+        const authenticate = authApp.authenticate
+        const getLoggedInUser = authApp.getLoggedInUser
 
-            authApp.authenticate = jest.fn((email: string, password: string) => {
-            });
+        authApp.authenticate = jest.fn((email: string, password: string) => {
+        });
 
-            authApp.getLoggedInUser = jest.fn((email: string, password: string) => {
-                throw new Error(<any>err.err.message)
-            });
+        authApp.getLoggedInUser = jest.fn((email: string, password: string) => {
+            throw new Error(<any>err.err.message)
+        });
 
         const button = indexOfSubmitButton
         button.trigger('click')
