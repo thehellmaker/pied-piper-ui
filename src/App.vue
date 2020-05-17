@@ -16,19 +16,19 @@
 </template>
 
 <script>
-import * as myAuthenticationPlugin from 'authenticationPlugin/App'
+import myAuthenticationPlugin from 'authenticationPlugin/App'
 export default {
   name: 'App',
   data () {
     return {
-      isLoggedIn: myAuthenticationPlugin.default.isAuthenticated(),
+      isLoggedIn: myAuthenticationPlugin.isAuthenticated(),
       error: ''
     }
   },
   methods: {
     logout: async function () {
       try {
-        await myAuthenticationPlugin.default.logout()
+        await myAuthenticationPlugin.logout()
         this.$router.go({ path: this.$router.path })
       } catch (err) {
         this.error = err.message

@@ -4,10 +4,10 @@
     <div id="formContent">
       <!-- Tabs Titles -->
       <h2 class="inactive underlineHover">
-        <a href="/login">Sign In</a>
+        <a id="login" href="/login">Sign In</a>
       </h2>
       <!--h2 class="inactive underlineHover">
-        <a href="/signup">Sign Up</a>
+        <a id= "signup" href="/signup">Sign Up</a>
       </h2-->
 
       <!-- Icon -->
@@ -15,7 +15,7 @@
         <img src="../../assets/logo-notext.jpg" id="icon" alt="User Icon" />
       </div>
 
-      <!-- Login Form -->
+      <!-- ForgotPassword Form -->
       <form>
         <input
           type="text"
@@ -25,7 +25,7 @@
           placeholder="Email"
           v-model="email"
         />
-        <input v-on:click="forgotPassword" type="submit" class="fadeIn fourth" value="Submit" />
+        <input v-on:click="forgotPassword" type="submit" class="fadeIn fourth" value="Submit" id="submit" />
       </form>
 
       <!-- Success message -->
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import * as myAuthenticationPlugin from 'authenticationPlugin/App'
+import myAuthenticationPlugin from 'authenticationPlugin/App'
 export default {
   name: 'forgotPassword',
   data: function () {
@@ -58,7 +58,7 @@ export default {
     forgotPassword: async function (e) {
       try {
         e.preventDefault()
-        this.successMessage = await myAuthenticationPlugin.default.forgotPassword(
+        this.successMessage = await myAuthenticationPlugin.forgotPassword(
           this.email
         )
       } catch (err) {

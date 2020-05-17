@@ -3,38 +3,39 @@ import 'firebase/auth'
 import './Init'
 
 const App = {
+  firebase: firebase,
   getLoggedInUser: () => {
-    const currentUser = firebase.auth().currentUser
+    const currentUser = App.firebase.auth().currentUser
     if (currentUser) {
       return {
-        email: firebase.auth().currentUser.email,
-        userId: firebase.auth().currentUser.uid,
-        isEmailVerified: firebase.auth().currentUser.emailVerified
+        email: currentUser.email,
+        userId: currentUser.uid,
+        isEmailVerified: currentUser.emailVerified
       }
     } else {
       return undefined
     }
   },
   isAuthenticated: () => {
-    return !!((App.getLoggedInUser() && App.getLoggedInUser().isEmailVerified === true))
+    return (App.getLoggedInUser() && App.getLoggedInUser().isEmailVerified)
   },
   authenticate: async (email, password) => {
-    await firebase.auth().signInWithEmailAndPassword(email, password)
+    await App.firebase.auth().signInWithEmailAndPassword(email, password)
   },
   signup: async (email, password) => {
-    const user = await firebase.auth().createUserWithEmailAndPassword(email, password)
-    await user.user.sendEmailVerification()
+    const userCredential = await App.firebase.auth().createUserWithEmailAndPassword(email, password)
+    await userCredential.user.sendEmailVerification()
     return `Check your email for verification mail before logging in`
   },
   forgotPassword: async (email) => {
-    await firebase.auth().sendPasswordResetEmail(email)
+    await App.firebase.auth().sendPasswordResetEmail(email)
     return (`Reset password link sent to ${email}`)
   },
   logout: async () => {
-    await firebase.auth().signOut()
+    await App.firebase.auth().signOut()
   },
   onAuthStateChanged: (onAuthStateChangedCallback) => {
-    firebase.auth().onAuthStateChanged(onAuthStateChangedCallback)
+    App.firebase.auth().onAuthStateChanged(onAuthStateChangedCallback)
   }
 }
 

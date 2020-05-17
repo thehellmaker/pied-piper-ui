@@ -5,7 +5,7 @@ import CreateAPI from './views/CreateAPI.vue'
 import Login from './views/authentication/LogIn.vue'
 import Signup from './views/authentication/SignUp.vue'
 import forgotPassword from './views/authentication/ForgotPassword.vue'
-import * as myAuthenticationPlugin from 'authenticationPlugin/App'
+import myAuthenticationPlugin from 'authenticationPlugin/App'
 Vue.use(Router)
 let router = new Router({
   mode: 'history',
@@ -96,9 +96,9 @@ function requiresGuestLogic (to:Route, next:Function) {
 }
 
 function isUserLoggedIn () {
-  return myAuthenticationPlugin.default.getLoggedInUser()
+  return myAuthenticationPlugin.getLoggedInUser()
 }
 function isUserEmailVerified () {
-  return myAuthenticationPlugin.default.getLoggedInUser().isEmailVerified
+  return myAuthenticationPlugin.getLoggedInUser().isEmailVerified
 }
 export default router
