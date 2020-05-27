@@ -118,12 +118,7 @@
 
                   <div v-if="getViewType(parameter) === 'DROPDOWN'">
                     <select class="left" v-model="parameter.parameterValue">
-                      <template v-if="parameter.parameterName === 'method'">
-                        <option v-for="allowedValue in restMethods" :value="allowedValue" :key="allowedValue">{{allowedValue}}</option>
-                      </template>
-                      <template v-else>
-                        <option v-for="allowedValue in parameter.allowedValues" :value="allowedValue" :key="allowedValue">{{allowedValue}}</option>
-                      </template>
+                      <option v-for="allowedValue in restMethods(node.nodeClass)" :value="allowedValue" :key="allowedValue">{{allowedValue}}</option>
                     </select>
                   </div>
 
@@ -221,6 +216,18 @@ export default {
     }
   },
   methods: {
+    restMethods: function (nodeClass) {
+      for (var nodeKey in this.availableNodes) {
+        var node = this.availableNodes[nodeKey]
+        if (node.nodeClass === nodeClass) {
+          for (var parameterKey in node.parameterMetadataList) {
+            var parameter = node.parameterMetadataList[parameterKey]
+            return parameter.allowedValues
+          }
+        }
+      }
+      return []
+    },
     editorInit: function (editor) {
       require('brace/ext/language_tools') // language extension prerequsite...
       require('brace/mode/html')
@@ -474,20 +481,6 @@ export default {
   computed: {
     validGraph: function () {
       return this.isNotBlank(this.graph.graphName) && this.isNotBlank(this.graph.projectName)
-    },
-    restMethods: function () {
-      for (var nodeKey in this.availableNodes) {
-        var node = this.availableNodes[nodeKey]
-        if (node.nodeClass === 'com.github.piedpiper.node.rest.RESTServiceNode') {
-          for (var parameterKey in node.parameterMetadataList) {
-            var parameter = node.parameterMetadataList[parameterKey]
-            if (parameter.parameterName === 'method') {
-              return parameter.allowedValues
-            }
-          }
-        }
-      }
-      return []
     }
   }
 }
