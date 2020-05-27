@@ -8,8 +8,10 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "deploy": "node node_modules/s3-deploy/bin/s3-deploy './dist/**' --cwd './dist/' --region us-east-1 --bucket piedpiper.thehellmaker.com && aws cloudfront create-invalidation --distribution-id E3NDZ02DPR7ANJ --paths '/*'",
-    "release": "npm run build && npm run deploy"
+    "deploy-prod": "node node_modules/s3-deploy/bin/s3-deploy './dist/**' --cwd './dist/' --region us-east-1 --bucket piedpiper.thehellmaker.com && aws cloudfront create-invalidation --distribution-id E3NDZ02DPR7ANJ --paths '/*'",
+    "release-prod": "npm run build && npm run deploy",
+    "deploy-dev": "node node_modules/s3-deploy/bin/s3-deploy './dist/**' --cwd './dist/' --region us-east-1 --bucket piedpiper-dev.atom8.tech",
+    "release-dev": "npm run build && npm run deploy-dev"
   },
   "dependencies": {
     "ajv": "^6.12.0",
