@@ -15,12 +15,6 @@
           </div>
           <div class="btn btn-primary" @click="triggerExactSearch(projectName, graphName)"> Search </div>
         </div>
-        <div class="search-box">
-          <div>
-            <input class="search-text" placeholder="Search Pied Piper" v-model="searchTerm"/>
-          </div>
-          <div class="btn btn-primary" @click="triggerKeyworkSearch(searchTerm)"> Search </div>
-        </div>
       </div>
     </div>
     <div class="spacing"></div>
@@ -34,7 +28,6 @@
             <th align="left"> API NAME </th>
             <th align="left"> PROJECT NAME </th>
           </tr>
-
           <tr v-for="graph in graphList" :key="graph.graphName">
             <td class="api-name"> <a :href="'/api?projectName='+graph.projectName+'&graphName='+graph.graphName">{{graph.graphName}}</a>  </td>
             <td class="api-project-name" @click="triggerExactSearch(graph.projectName, '')"> {{graph.projectName}} </td>
@@ -63,7 +56,7 @@ export default {
   methods: {
     search: function () {
       var searchGraphInput = {
-        tableName: 'AlmightyTable',
+        filterType: 'UNIQUE_GRAPH_LIST_FILTER',
         projectName: this.projectName,
         graphName: this.graphName,
         searchTerm: this.searchTerm
@@ -73,7 +66,7 @@ export default {
         var parsedGraphs = []
         if (output.length === 0) this.$set(this, 'graphList', parsedGraphs)
         output.forEach(function (element) {
-          parsedGraphs.push(element.graph)
+          parsedGraphs.push(element)
         })
         this.$set(this, 'graphList', parsedGraphs)
       }, function (errorEvent) {
@@ -81,21 +74,20 @@ export default {
       })
     },
     triggerExactSearch: function (projectName, graphName) {
-      console.log(JSON.stringify(projectName))
-      this.projectName = projectName
-      this.graphName = graphName
-      this.search()
-    },
-    triggerKeyworkSearch: function (searchTerm) {
-      this.projectName = ''
-      this.graphName = ''
-      this.searchTerm = searchTerm
-      this.search()
+      if(projectName === undefined || projectName.trim() === '') return;
+      var url = '/?projectName='+projectName
+      if(graphName !== undefined && graphName.trim() !== '' )  url += '&graphName='+graphName
+      window.location.href = url
     }
   },
   mounted: function () {
-    this.projectName = 'Examples'
-    this.search()
+    if(this.$route.query.projectName === undefined || this.$route.query.projectName === '') {
+      window.location.href = '/?projectName=Examples'
+    } else {
+      this.projectName = this.$route.query.projectName
+      this.graphName = this.$route.query.graphName
+      this.search()
+    }
   }
 }
 </script>

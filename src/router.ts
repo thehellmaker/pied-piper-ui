@@ -19,14 +19,14 @@ let router = new Router({
         requiresGuest: true
       }
     },
-    // {
-    //   path: '/signup',
-    //   name: 'signup',
-    //   component: Signup,
-    //   meta: {
-    //     requiresGuest: true
-    //   }
-    // },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: Signup,
+      meta: {
+        requiresGuest: true
+      }
+    },
     {
       path: '/forgotpassword',
       name: 'forgotpassword',

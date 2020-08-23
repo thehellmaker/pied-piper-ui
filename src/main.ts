@@ -1,4 +1,5 @@
 import Vue from 'vue'
+
 import BootstrapVue from 'bootstrap-vue'
 import App from './App.vue'
 import router from './router'
@@ -11,10 +12,12 @@ import './registerServiceWorker'
 import myAuthenticationPlugin from 'authenticationPlugin/App'
 require('./assets/css/piedpiper.css')
 Vue.config.productionTip = false
-
+Vue.config.devtools = true
 Vue.use(BootstrapVue)
 Vue.use(Resource)
 Vue.use(TreeView)
+
+
 
 let app: import('vue/types/vue').CombinedVueInstance<Vue, object, object, object, Record<never, any>> | undefined
 myAuthenticationPlugin.onAuthStateChanged(() => {

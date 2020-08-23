@@ -17,6 +17,7 @@
 
 <script>
 import myAuthenticationPlugin from 'authenticationPlugin/App'
+
 export default {
   name: 'App',
   data () {

@@ -265,6 +265,14 @@ a {
   border: 1px solid #EEE;
 }
 
+.version-ddown {
+  margin: 0!important;
+}
+
+.version-ddown-li {
+  display:block!important;
+}
+
 .param-details-container .heading {
   margin-bottom: 30px;
 }
@@ -344,7 +352,10 @@ a {
 }
 .nav-actions-container {
   display: inline-block;
-  width: 100%;
+}
+
+.nav-actions {
+  display: inline-block;
 }
 
 .explicit-input-each {
