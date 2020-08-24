@@ -180,6 +180,7 @@
 import editable from './Editable.vue'
 const host = require('../../config.js')
 var hostnamePrefix = host.hostname
+var writeHostname = host.writeHostname
 export default {
   name: 'PiedPiper',
   components: {
@@ -443,10 +444,13 @@ export default {
       this.saveInProgress = true
       var saveGraphInput = {
         graph: this.graph,
-        tableName: 'AlmightyTable'
+        tableName: 'AlmightyTable',
+        saveType: 'POST_NEW_VERSION',
+        branchName: 'master',
+        versionDescription: 'Migrate from non versioned graph from prod'
       }
       this.saveGraphSuccess = false
-      this.$http.put(hostnamePrefix + '/graph', saveGraphInput).then(function (successEvent) {
+      this.$http.put(writeHostname + '/graph', saveGraphInput).then(function (successEvent) {
         this.saveGraphError = false
         this.saveGraphSuccess = true
         this.saveInProgress = false
