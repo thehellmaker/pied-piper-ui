@@ -46,7 +46,7 @@
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.2.3",
     "flush-promises": "^1.0.2",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "s3-deploy": "^1.4.0",
     "sass-loader": "^7.3.1",
     "typescript": "^3.8.3",
