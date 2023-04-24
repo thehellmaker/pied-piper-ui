@@ -18,7 +18,7 @@
     "bootstrap-vue": "^2.10.1",
     "bourbon": "^7.0.0",
     "firebase": "^7.13.0",
-    "firebase-tools": "^7.16.2",
+    "firebase-tools": "^11.28.0",
     "jquery": "^3.4.1",
     "material-design-icons": "^3.0.1",
     "minimist": "^1.2.5",
