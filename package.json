@@ -21,7 +21,7 @@
     "firebase-tools": "^7.16.2",
     "jquery": "^3.4.1",
     "material-design-icons": "^3.0.1",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
     "vue-class-component": "^6.0.0",
